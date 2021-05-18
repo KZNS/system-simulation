@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" type="text/css" href="scheduling.css" />
+    <title>进程调度</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <h1>进程调度算法</h1>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <h2>算法设置</h2>
+        </div>
+        <div class="row">
+            <label for="selectAlgorithm" class="col-2 col-form-label">进程调度算法</label>
+            <div class="col-3">
+                <select class="form-select" aria-label="进程调度算法选择" id="selectAlgorithm">
+                    <option value="1">先来先服务FCFS</option>
+                    <option value="2">轮转RR（q=1）</option>
+                    <option value="3">最短进程优先SJF</option>
+                    <option value="4">最高响应比优先HRN</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <h2>进程任务</h2>
+        </div>
+        <div class="row">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">到达时间</th>
+                        <th scope="col">服务时间</th>
+                        <th scope="col">完成时间</th>
+                        <th scope="col">周转时间</th>
+                        <th scope="col">带权周转时间</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="到达时间" aria-label="Username"
+                                    aria-describedby="basic-addon1">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="服务时间" aria-label="Username"
+                                    aria-describedby="basic-addon1">
+                            </div>
+                        </td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td>--</td>
+                        <td><button type="button" class="btn btn-danger">删除</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <button type="button" class="btn btn-primary">提交数据</button>
+            </div>
+            <div class="col">
+            </div>
+            <div class="col-6" , style="text-align: right">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success">新增一行</button>
+                    <button type="button" class="btn btn-warning">新增随机数据</button>
+                    <button type="button" class="btn btn-danger">删除最后一行</button>
+                </div>
+                <button type="button" class="btn btn-danger">清空</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>
+                    动画模拟
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success">自动播放</button>
+                    <button type="button" class="btn btn-warning">暂停</button>
+                    <button type="button" class="btn btn-danger">恢复</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary">单步执行</button>
+                    <button type="button" class="btn btn-primary">单步后退</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1">时间</span>
+                    <input type="text" class="form-control" placeholder="0" aria-label="Username"
+                        aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary">跳转</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                #
+            </div>
+            <div class="col">
+                剩余时长
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-1">
+                1
+            </div>
+            <div class="col">
+                <div class="progress" style="width: 80%; display: inline-block;">
+                    <div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="25" aria-valuemin="0"
+                        aria-valuemax="100">10</div>
+                </div>
+                <div style="display: inline-block;">100</div>
+            </div>
+            <div class="col-1">
+            </div>
+        </div>
+    </div>
+
+    <script src="scheduling.js"></script>
+</body>
+
+</html>
