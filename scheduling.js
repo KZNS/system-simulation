@@ -48,6 +48,13 @@ function updateTable() {
     }
 }
 
+function newProcessorInfo() {
+    console.log("do newProcessorInfo()");
+
+    processors.push(newProcessor())
+    updateTable();
+}
+
 function initPage() {
     console.log("do initPage()");
 
