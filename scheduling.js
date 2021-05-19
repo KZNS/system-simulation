@@ -51,7 +51,16 @@ function updateTable() {
 function newProcessorInfo() {
     console.log("do newProcessorInfo()");
 
-    processors.push(newProcessor())
+    processors.push(newProcessor());
+    updateTable();
+}
+function delProcessorInfoLast() {
+    console.log("do delProcessorInfoLast()");
+
+    processors.pop();
+    if (processors.length == 0) {
+        processors.push(newProcessor());
+    }
     updateTable();
 }
 
