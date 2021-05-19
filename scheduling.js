@@ -63,6 +63,13 @@ function delProcessorInfoLast() {
     }
     updateTable();
 }
+function delProcessorInfoAll() {
+    console.log("do delProcessorInfoAll()");
+
+    processors = [];
+    processors.push(newProcessor());
+    updateTable();
+}
 
 function initPage() {
     console.log("do initPage()");
