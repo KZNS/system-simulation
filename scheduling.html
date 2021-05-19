@@ -52,7 +52,7 @@
             <h2>进程任务</h2>
         </div>
         <div class="row">
-            <table class="table table-striped">
+            <table class="table table-striped" id="processorsInfos">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -65,23 +65,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr class="processorInfo">
                         <th scope="row">1</th>
                         <td>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="到达时间" aria-label="Username"
-                                    aria-describedby="basic-addon1">
+                                <input type="text" class="form-control arrivalTime" placeholder="到达时间" value="">
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="服务时间" aria-label="Username"
-                                    aria-describedby="basic-addon1">
+                                <input type="text" class="form-control serviceTime" placeholder="服务时间" value="">
                             </div>
                         </td>
-                        <td>--</td>
-                        <td>--</td>
-                        <td>--</td>
+                        <td class="completionTime">--</td>
+                        <td class="turnaroundTime">--</td>
+                        <td class="turnaroundTimeRights">--</td>
                         <td><button type="button" class="btn btn-danger">删除</button></td>
                     </tr>
                 </tbody>
@@ -167,7 +165,10 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="scheduling.js"></script>
+    <script>initPage()</script>
 </body>
 
 </html>
