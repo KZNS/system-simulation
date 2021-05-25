@@ -39,7 +39,7 @@ function formatFitProcess(i) {
 
 function updateTable() {
     console.log("do updateTable()");
-    var processInfosTbody = $("#processesInfos").find("tbody");
+    var processInfosTbody = $("#processInfos").find("tbody");
     processInfosTbody.empty();
 
     for (i = 0; i < processes.length; i++) {

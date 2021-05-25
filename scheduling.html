@@ -52,7 +52,7 @@
             <h2>进程任务</h2>
         </div>
         <div class="row">
-            <table class="table table-striped" id="processesInfos">
+            <table class="table table-striped" id="processInfos">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -93,9 +93,8 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#inputProessInfos-Modal">批量添加数据</button>
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                        data-bs-target="#printProessInfos-Modal">复制当前数据</button>
+                        data-bs-target="#inputProcessInfos-Modal">批量添加数据</button>
+                    <button type="button" class="btn btn-primary">复制当前数据</button>
                 </div>
 
             </div>
@@ -175,16 +174,16 @@
 
 
     <!-- Modals -->
-    <div class="modal fade" id="inputProessInfos-Modal" tabindex="-1" aria-labelledby="inputProessInfos-Modal-Label"
+    <div class="modal fade" id="inputProcessInfos-Modal" tabindex="-1" aria-labelledby="inputProcessInfos-Modal-Label"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="inputProessInfos-Modal-Label">批量添加数据</h5>
+                    <h5 class="modal-title" id="inputProcessInfos-Modal-Label">批量添加数据</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <textarea class="form-control" id="inputProessInfos" rows="7"></textarea>
+                    <textarea class="form-control" id="inputProcessInfos" rows="7"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
