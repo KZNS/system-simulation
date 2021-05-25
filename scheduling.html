@@ -90,6 +90,14 @@
                 <button type="button" class="btn btn-primary">提交数据</button>
             </div>
             <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#inputProessInfos-Modal">批量添加数据</button>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                        data-bs-target="#printProessInfos-Modal">复制当前数据</button>
+                </div>
+
             </div>
             <div class="col-6" , style="text-align: right">
                 <div class="btn-group" role="group" aria-label="Basic example">
@@ -165,6 +173,28 @@
         </div>
     </div>
 
+
+    <!-- Modals -->
+    <div class="modal fade" id="inputProessInfos-Modal" tabindex="-1" aria-labelledby="inputProessInfos-Modal-Label"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputProessInfos-Modal-Label">批量添加数据</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea class="form-control" id="inputProessInfos" rows="7"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="scheduling.js"></script>
