@@ -1,10 +1,10 @@
-var processors = [];
+var processes = [];
 
 var completionTimeDefault;
 var turnaroundTimeDefault;
 var turnaroundTimeRightsDefault;
 
-var processorInfoFormat;
+var processInfoFormat;
 
 function getPageElements() {
     console.log("do getPageElements()");
@@ -13,11 +13,11 @@ function getPageElements() {
     turnaroundTimeDefault = $(".turnaroundTime:first").text();
     turnaroundTimeRightsDefault = $(".turnaroundTimeRights:first").text();
 
-    processorInfoFormat = $(".processorInfo:first").clone();
+    processInfoFormat = $(".processInfo:first").clone();
 }
 
-function newProcessor() {
-    console.log("do newProcessor()");
+function newProcess() {
+    console.log("do newProcess()");
     var p = {
         arrivalTime: null,
         serviceTime: null,
@@ -28,46 +28,46 @@ function newProcessor() {
     return p;
 }
 
-function formatFitProcessor(i) {
-    processorInfoFormat.find("th").text(i + 1);
-    processorInfoFormat.find(".arrivalTime").attr("value", processors[i].arrivalTime);
-    processorInfoFormat.find(".serviceTime").attr("value", processors[i].serviceTime);
-    processorInfoFormat.find(".completionTime").text(processors[i].completionTime);
-    processorInfoFormat.find(".turnaroundTime").text(processors[i].turnaroundTime);
-    processorInfoFormat.find(".turnaroundTimeRights").text(processors[i].turnaroundTimeRights);
+function formatFitProcess(i) {
+    processInfoFormat.find("th").text(i + 1);
+    processInfoFormat.find(".arrivalTime").attr("value", processes[i].arrivalTime);
+    processInfoFormat.find(".serviceTime").attr("value", processes[i].serviceTime);
+    processInfoFormat.find(".completionTime").text(processes[i].completionTime);
+    processInfoFormat.find(".turnaroundTime").text(processes[i].turnaroundTime);
+    processInfoFormat.find(".turnaroundTimeRights").text(processes[i].turnaroundTimeRights);
 }
 
 function updateTable() {
     console.log("do updateTable()");
-    var processorInfosTbody = $("#processorsInfos").find("tbody");
-    processorInfosTbody.empty();
+    var processInfosTbody = $("#processesInfos").find("tbody");
+    processInfosTbody.empty();
 
-    for (i = 0; i < processors.length; i++) {
-        formatFitProcessor(i);
-        processorInfosTbody.append(processorInfoFormat.prop('outerHTML'));
+    for (i = 0; i < processes.length; i++) {
+        formatFitProcess(i);
+        processInfosTbody.append(processInfoFormat.prop('outerHTML'));
     }
 }
 
-function newProcessorInfo() {
-    console.log("do newProcessorInfo()");
+function newProcessInfo() {
+    console.log("do newProcessInfo()");
 
-    processors.push(newProcessor());
+    processes.push(newProcess());
     updateTable();
 }
-function delProcessorInfoLast() {
-    console.log("do delProcessorInfoLast()");
+function delProcessInfoLast() {
+    console.log("do delProcessInfoLast()");
 
-    processors.pop();
-    if (processors.length == 0) {
-        processors.push(newProcessor());
+    processes.pop();
+    if (processes.length == 0) {
+        processes.push(newProcess());
     }
     updateTable();
 }
-function delProcessorInfoAll() {
-    console.log("do delProcessorInfoAll()");
+function delProcessInfoAll() {
+    console.log("do delProcessInfoAll()");
 
-    processors = [];
-    processors.push(newProcessor());
+    processes = [];
+    processes.push(newProcess());
     updateTable();
 }
 
@@ -75,6 +75,6 @@ function initPage() {
     console.log("do initPage()");
 
     getPageElements();
-    processors.push(newProcessor());
+    processes.push(newProcess());
     updateTable();
 }
