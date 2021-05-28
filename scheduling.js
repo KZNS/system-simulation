@@ -1,3 +1,5 @@
+var NonNegInt = /^(|0|[1-9]\d*)$/;
+
 var processes = [];
 
 var completionTimeDefault;
@@ -77,4 +79,18 @@ function initPage() {
     getPageElements();
     processes.push(newProcess());
     updateTable();
+}
+
+function checkNonNegInt(data) {
+    var value = $(data).val();
+    if (NonNegInt.test(value)) {
+        console.log("ok " + value);
+        $(data).removeClass("is-invalid");
+    }
+    else {
+        console.log("wrong " + value);
+        if (!$(data).hasClass("is-invalid")) {
+            $(data).addClass("is-invalid");
+        }
+    }
 }
