@@ -70,13 +70,13 @@
                         <td>
                             <div class="input-group">
                                 <input type="text" class="form-control arrivalTime" placeholder="到达时间"
-                                    oninput="checkNonNegInt(this)" value="">
+                                    oninput="checkNonNegInt(this)" onchange="bindingProcess(this)" value="">
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
                                 <input type="text" class="form-control serviceTime" placeholder="服务时间"
-                                    oninput="checkNonNegInt(this)" value="">
+                                    oninput="checkNonNegInt(this)" onchange="bindingProcess(this)" value="">
                             </div>
                         </td>
                         <td class="completionTime">--</td>

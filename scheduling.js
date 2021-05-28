@@ -2,6 +2,8 @@ var NonNegInt = /^(|0|[1-9]\d*)$/;
 
 var processes = [];
 
+var arrivalTimeDefault;
+var serviceTimeDefault;
 var completionTimeDefault;
 var turnaroundTimeDefault;
 var turnaroundTimeRightsDefault;
@@ -11,6 +13,8 @@ var processInfoFormat;
 function getPageElements() {
     console.log("do getPageElements()");
 
+    arrivalTimeDefault = $(".arrivalTime:first").val();
+    serviceTimeDefault = $(".serviceTime:first").val();
     completionTimeDefault = $(".completionTime:first").text();
     turnaroundTimeDefault = $(".turnaroundTime:first").text();
     turnaroundTimeRightsDefault = $(".turnaroundTimeRights:first").text();
@@ -22,8 +26,8 @@ function newProcess() {
     console.log("do newProcess()");
     var p = {
         processId: "",
-        arrivalTime: null,
-        serviceTime: null,
+        arrivalTime: arrivalTimeDefault,
+        serviceTime: serviceTimeDefault,
         completionTime: completionTimeDefault,
         turnaroundTime: turnaroundTimeDefault,
         turnaroundTimeRights: turnaroundTimeRightsDefault
@@ -52,6 +56,8 @@ function updateTable() {
         formatFitProcess(i);
         processInfosTbody.append(processInfoFormat.prop('outerHTML'));
     }
+
+    processInfosTbody.find("input").trigger("oninput");
 }
 
 function newProcessInfo() {
@@ -113,4 +119,26 @@ function checkNonNegInt(data) {
             $(data).addClass("is-invalid");
         }
     }
+}
+
+function bindingProcess(data) {
+    console.log("do bindingProcess()");
+    var value = $(data).val();
+    var attr = "";
+    var processId = $(data).parents("tr").attr("id");
+    var index = processId.replace(/[^0-9]/ig, "");
+
+    if ($(data).hasClass("arrivalTime")) {
+        attr = "arrivalTime";
+    }
+    else if ($(data).hasClass("serviceTime")) {
+        attr = "serviceTime";
+    }
+    else {
+        console.log("wrong in bindingProcess()");
+        return;
+    }
+
+    processes[index][attr] = value;
+    console.log(processes[index]);
 }
