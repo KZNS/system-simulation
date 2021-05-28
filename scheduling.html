@@ -69,18 +69,21 @@
                         <th scope="row">1</th>
                         <td>
                             <div class="input-group">
-                                <input type="text" class="form-control arrivalTime" placeholder="到达时间" oninput="checkNonNegInt(this)" value="">
+                                <input type="text" class="form-control arrivalTime" placeholder="到达时间"
+                                    oninput="checkNonNegInt(this)" value="">
                             </div>
                         </td>
                         <td>
                             <div class="input-group">
-                                <input type="text" class="form-control serviceTime" placeholder="服务时间" oninput="checkNonNegInt(this)" value="">
+                                <input type="text" class="form-control serviceTime" placeholder="服务时间"
+                                    oninput="checkNonNegInt(this)" value="">
                             </div>
                         </td>
                         <td class="completionTime">--</td>
                         <td class="turnaroundTime">--</td>
                         <td class="turnaroundTimeRights">--</td>
-                        <td><button type="button" class="btn btn-danger">删除</button></td>
+                        <td><button type="button" class="btn btn-danger" onclick="delProcessInfoThis(this)">删除</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
