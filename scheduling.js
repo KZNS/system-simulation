@@ -142,3 +142,21 @@ function bindingProcess(data) {
     processes[index][attr] = value;
     console.log(processes[index]);
 }
+
+function copyToClipboard(copyText) {
+    console.log("do copyToClipboard()");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999);
+    document.execCommand("copy");
+    console.log(copyText.value);
+}
+function saveProcessInfos() {
+    console.log("do saveProcessInfos()");
+    var infos = "";
+    for (var i = 0; i < processes.length; i++) {
+        infos = infos + processes[i].arrivalTime + ',' + processes[i].serviceTime + '\n';
+    }
+    $("#inputProcessInfos").val(infos);
+
+    copyToClipboard(document.getElementById("inputProcessInfos"));
+}
