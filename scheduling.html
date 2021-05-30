@@ -96,7 +96,7 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#inputProcessInfos-Modal">批量添加数据</button>
+                        data-bs-target="#inputProcessInfos-Modal" onclick="initModal(this)">批量添加数据</button>
                     <button type="button" class="btn btn-primary" onclick="saveProcessInfos()">复制当前数据</button>
                 </div>
 
@@ -189,8 +189,11 @@
                     <textarea class="form-control" id="inputProcessInfos" rows="7"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Save changes</button>
+                    <div class="alert alert-danger fade" role="alert">
+                        错误数据格式
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-success" onclick="inputProcessInfos(this)">添加</button>
                 </div>
             </div>
         </div>
