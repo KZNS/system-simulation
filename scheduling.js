@@ -143,13 +143,6 @@ function bindingProcess(data) {
     console.log(processes[index]);
 }
 
-function copyToClipboard(copyText) {
-    console.log("do copyToClipboard()");
-    copyText.select();
-    copyText.setSelectionRange(0, 99999);
-    document.execCommand("copy");
-    console.log(copyText.value);
-}
 function initModal(data) {
     console.log("do initModal()");
     var target = $(data).attr("data-bs-target");
@@ -180,13 +173,12 @@ function inputProcessInfos(data) {
 }
 function saveProcessInfos() {
     console.log("do saveProcessInfos()");
-    var infos = "";
-    for (var i = 0; i < processes.length; i++) {
-        infos = infos + processes[i].arrivalTime + ',' + processes[i].serviceTime + '\n';
+    var infos = processes[0].arrivalTime + ',' + processes[0].serviceTime;
+    for (var i = 1; i < processes.length; i++) {
+        infos = infos + '\n' + processes[i].arrivalTime + ',' + processes[i].serviceTime;
     }
-    $("#inputProcessInfos").val(infos);
 
-    copyToClipboard(document.getElementById("inputProcessInfos"));
+    navigator.clipboard.writeText(infos)
 }
 
 // ref: http://stackoverflow.com/a/1293163/2343
