@@ -208,26 +208,29 @@ function calculat(algorithm) {
     }
     console.log(processes);
     if (algorithm == 'FCFS') {
-        console.log("calculating FCFS");
-        ls.sort(
-            function (a, b) {
-                if (a.arrivalTime == b.arrivalTime) {
-                    return a.id - b.id;
-                }
-                else {
-                    return a.arrivalTime - b.arrivalTime;
-                }
+        calculatFCFS(ls);
+    }
+}
+function calculatFCFS(ls) {
+    console.log("calculating FCFS");
+    ls.sort(
+        function (a, b) {
+            if (a.arrivalTime == b.arrivalTime) {
+                return a.id - b.id;
             }
-        )
-        console.log(ls);
-        var click = 1;
-        for (var i = 0; i < ls.length; i++) {
-            click = Math.max(click, ls[i].arrivalTime);
-            processes[ls[i].id].completionTime = click + ls[i].serviceTime;
-            processes[ls[i].id].turnaroundTime = click + ls[i].serviceTime - ls[i].arrivalTime;
-            processes[ls[i].id].turnaroundTimeRights = ((click + ls[i].serviceTime - ls[i].arrivalTime) / ls[i].serviceTime).toFixed(2);
-            click += ls[i].serviceTime;
+            else {
+                return a.arrivalTime - b.arrivalTime;
+            }
         }
+    )
+    console.log(ls);
+    var click = 1;
+    for (var i = 0; i < ls.length; i++) {
+        click = Math.max(click, ls[i].arrivalTime);
+        processes[ls[i].id].completionTime = click + ls[i].serviceTime;
+        processes[ls[i].id].turnaroundTime = click + ls[i].serviceTime - ls[i].arrivalTime;
+        processes[ls[i].id].turnaroundTimeRights = ((click + ls[i].serviceTime - ls[i].arrivalTime) / ls[i].serviceTime).toFixed(2);
+        click += ls[i].serviceTime;
     }
 }
 
