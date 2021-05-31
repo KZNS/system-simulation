@@ -226,6 +226,9 @@ function calculate(algorithm) {
     else if (algorithm == 'RR') {
         calculateRR(ls);
     }
+    else if (algorithm == 'SJF') {
+        calculateSJF(ls);
+    }
     calculateRest();
 }
 function calculateRest() {
@@ -237,7 +240,7 @@ function calculateRest() {
 }
 function calculateFCFS(ls) {
     console.log("calculating FCFS");
-    var clock = 1;
+    var clock = 0;
     for (var i = 0; i < ls.length; i++) {
         clock = Math.max(clock, ls[i].arrivalTime);
         processes[ls[i].id].completionTime = clock + ls[i].serviceTime;
@@ -246,7 +249,7 @@ function calculateFCFS(ls) {
 }
 function calculateRR(ls) {
     console.log("calculating RR");
-    var clock = 1;
+    var clock = 0;
     var RRls = [];
     for (var i = 0; i < ls.length; i++) {
         if (RRls.length != 0) {
@@ -260,18 +263,22 @@ function calculateRR(ls) {
                 RRls[j].remainingTime -= step;
             }
             clock += step * RRls.length;
-        }
-        while (RRls.length != 0 && clock < ls[i].arrivalTime) {
-            var process = RRls.shift();
-            process.remainingTime--;
-            clock++;
-            if (process.remainingTime > 0) {
-                RRls.push(process);
+            while (RRls.length != 0 && clock < ls[i].arrivalTime) {
+                var process = RRls.shift();
+                process.remainingTime--;
+                clock++;
+                if (process.remainingTime > 0) {
+                    RRls.push(process);
+                }
+                else {
+                    processes[process.process.id].completionTime = clock;
+                }
             }
-            else {
-                processes[process.process.id].completionTime = clock;
-            }
         }
+        else {
+            clock = Math.max(clock, ls[i].arrivalTime);
+        }
+
         RRls.push({ process: ls[i], remainingTime: ls[i].serviceTime });
     }
     while (RRls.length != 0) {
@@ -288,6 +295,30 @@ function calculateRR(ls) {
                 i--;
             }
         }
+    }
+}
+function calculateSJF(ls) {
+    console.log("calculating SJF");
+    var clock = 0;
+    var SJFls = [];
+    var i = 0;
+    while (i < ls.length || SJFls.length > 0) {
+        if (SJFls.length == 0) {
+            clock = Math.max(clock, ls[i].arrivalTime);
+        }
+        while (i < ls.length && clock >= ls[i].arrivalTime) {
+            SJFls.push(ls[i]);
+            i++;
+        }
+        var minone = 0;
+        for (var j = 1; j < SJFls.length; j++) {
+            if (SJFls[j].serviceTime < SJFls[minone].serviceTime) {
+                minone = j;
+            }
+        }
+        clock += SJFls[minone].serviceTime;
+        processes[SJFls[minone].id].completionTime = clock;
+        SJFls.splice(minone, 1);
     }
 }
 
