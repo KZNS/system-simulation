@@ -194,25 +194,21 @@ function commitProcessInfos() {
     }
     var algorithm = $("select").val();
     console.log(algorithm);
-    calculat(algorithm);
+    calculate(algorithm);
     updateTable();
 }
-function calculat(algorithm) {
+function calculate(algorithm) {
     var ls = [];
+    console.log(processes);
     for (var i = 0; i < processes.length; i++) {
+        processes[i].arrivalTime = parseInt(processes[i].arrivalTime);
+        processes[i].serviceTime = parseInt(processes[i].serviceTime);
         ls.push({
             id: i,
-            arrivalTime: parseInt(processes[i].arrivalTime),
-            serviceTime: parseInt(processes[i].serviceTime)
+            arrivalTime: processes[i].arrivalTime,
+            serviceTime: processes[i].serviceTime
         });
     }
-    console.log(processes);
-    if (algorithm == 'FCFS') {
-        calculatFCFS(ls);
-    }
-}
-function calculatFCFS(ls) {
-    console.log("calculating FCFS");
     ls.sort(
         function (a, b) {
             if (a.arrivalTime == b.arrivalTime) {
@@ -224,13 +220,74 @@ function calculatFCFS(ls) {
         }
     )
     console.log(ls);
-    var click = 1;
+    if (algorithm == 'FCFS') {
+        calculateFCFS(ls);
+    }
+    else if (algorithm == 'RR') {
+        calculateRR(ls);
+    }
+    calculateRest();
+}
+function calculateRest() {
+    for (var i = 0; i < processes.length; i++) {
+        var process = processes[i];
+        process.turnaroundTime = process.completionTime - process.arrivalTime;
+        process.turnaroundTimeRights = (process.turnaroundTime / process.serviceTime).toFixed(2);
+    }
+}
+function calculateFCFS(ls) {
+    console.log("calculating FCFS");
+    var clock = 1;
     for (var i = 0; i < ls.length; i++) {
-        click = Math.max(click, ls[i].arrivalTime);
-        processes[ls[i].id].completionTime = click + ls[i].serviceTime;
-        processes[ls[i].id].turnaroundTime = click + ls[i].serviceTime - ls[i].arrivalTime;
-        processes[ls[i].id].turnaroundTimeRights = ((click + ls[i].serviceTime - ls[i].arrivalTime) / ls[i].serviceTime).toFixed(2);
-        click += ls[i].serviceTime;
+        clock = Math.max(clock, ls[i].arrivalTime);
+        processes[ls[i].id].completionTime = clock + ls[i].serviceTime;
+        clock += ls[i].serviceTime;
+    }
+}
+function calculateRR(ls) {
+    console.log("calculating RR");
+    var clock = 1;
+    var RRls = [];
+    for (var i = 0; i < ls.length; i++) {
+        if (RRls.length != 0) {
+            var minRemainningTime = RRls[0].remainingTime;
+            for (var j = 1; j < RRls.length; j++) {
+                minRemainningTime = Math.min(minRemainningTime, RRls[j].remainingTime);
+            }
+            var step;
+            step = Math.min(minRemainningTime - 1, Math.floor((ls[i].arrivalTime - clock) / RRls.length))
+            for (var j = 0; j < RRls.length; j++) {
+                RRls[j].remainingTime -= step;
+            }
+            clock += step * RRls.length;
+        }
+        while (RRls.length != 0 && clock < ls[i].arrivalTime) {
+            var process = RRls.shift();
+            process.remainingTime--;
+            clock++;
+            if (process.remainingTime > 0) {
+                RRls.push(process);
+            }
+            else {
+                processes[process.process.id].completionTime = clock;
+            }
+        }
+        RRls.push({ process: ls[i], remainingTime: ls[i].serviceTime });
+    }
+    while (RRls.length != 0) {
+        var minRemainningTime = RRls[0].remainingTime;
+        for (var j = 1; j < RRls.length; j++) {
+            minRemainningTime = Math.min(minRemainningTime, RRls[j].remainingTime);
+        }
+        clock += minRemainningTime * RRls.length;
+        for (var i = 0; i < RRls.length; i++) {
+            RRls[i].remainingTime -= minRemainningTime;
+            if (RRls[i].remainingTime <= 0) {
+                processes[RRls[i].process.id].completionTime = clock - (RRls.length - i - 1);
+                RRls.splice(i, 1);
+                i--;
+            }
+        }
     }
 }
 
