@@ -32,10 +32,10 @@
             <label for="selectAlgorithm" class="col-2 col-form-label">进程调度算法</label>
             <div class="col-3">
                 <select class="form-select" aria-label="进程调度算法选择" id="selectAlgorithm">
-                    <option value="1">先来先服务FCFS</option>
-                    <option value="2">轮转RR（q=1）</option>
-                    <option value="3">最短进程优先SJF</option>
-                    <option value="4">最高响应比优先HRN</option>
+                    <option value="FCFS">先来先服务FCFS</option>
+                    <option value="RR">轮转RR（q=1）</option>
+                    <option value="SJF">最短进程优先SJF</option>
+                    <option value="HRN">最高响应比优先HRN</option>
                 </select>
             </div>
         </div>
@@ -90,7 +90,7 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <button type="button" class="btn btn-primary">提交数据</button>
+                <button type="button" class="btn btn-primary" onclick="commitProcessInfos()">提交数据</button>
             </div>
             <div class="col">
                 <div class="btn-group" role="group" aria-label="Basic example">

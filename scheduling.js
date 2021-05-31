@@ -1,6 +1,8 @@
-var NonNegInt = /^(|0|[1-9]\d*)$/;
+var NonNegInt = /^(0|[1-9]\d*)$/;
 
 var processes = [];
+var commited = false;
+var hasWrongProcessInfo = false;
 
 var arrivalTimeDefault;
 var serviceTimeDefault;
@@ -56,7 +58,7 @@ function updateTable() {
         formatFitProcess(i);
         processInfosTbody.append(processInfoFormat.prop('outerHTML'));
     }
-
+    hasWrongProcessInfo = false;
     processInfosTbody.find("input").trigger("oninput");
 }
 
@@ -96,6 +98,7 @@ function delProcessInfoAll() {
 
     processes = [];
     processes.push(newProcess());
+    commited = false;
     updateTable();
 }
 
@@ -109,12 +112,13 @@ function initPage() {
 
 function checkNonNegInt(data) {
     var value = $(data).val();
-    if (NonNegInt.test(value)) {
+    if (NonNegInt.test(value) || (!commited && value == "")) {
         console.log("ok " + value);
         $(data).removeClass("is-invalid");
     }
     else {
         console.log("wrong " + value);
+        hasWrongProcessInfo = true;
         if (!$(data).hasClass("is-invalid")) {
             $(data).addClass("is-invalid");
         }
@@ -179,6 +183,52 @@ function saveProcessInfos() {
     }
 
     navigator.clipboard.writeText(infos)
+}
+
+function commitProcessInfos() {
+    commited = true;
+    updateTable();
+    if (hasWrongProcessInfo) {
+        console.log("hasWrongProcessInfo");
+        return;
+    }
+    var algorithm = $("select").val();
+    console.log(algorithm);
+    calculat(algorithm);
+    updateTable();
+}
+function calculat(algorithm) {
+    var ls = [];
+    for (var i = 0; i < processes.length; i++) {
+        ls.push({
+            id: i,
+            arrivalTime: parseInt(processes[i].arrivalTime),
+            serviceTime: parseInt(processes[i].serviceTime)
+        });
+    }
+    console.log(processes);
+    if (algorithm == 'FCFS') {
+        console.log("calculating FCFS");
+        ls.sort(
+            function (a, b) {
+                if (a.arrivalTime == b.arrivalTime) {
+                    return a.id - b.id;
+                }
+                else {
+                    return a.arrivalTime - b.arrivalTime;
+                }
+            }
+        )
+        console.log(ls);
+        var click = 1;
+        for (var i = 0; i < ls.length; i++) {
+            click = Math.max(click, ls[i].arrivalTime);
+            processes[ls[i].id].completionTime = click + ls[i].serviceTime;
+            processes[ls[i].id].turnaroundTime = click + ls[i].serviceTime - ls[i].arrivalTime;
+            processes[ls[i].id].turnaroundTimeRights = ((click + ls[i].serviceTime - ls[i].arrivalTime) / ls[i].serviceTime).toFixed(2);
+            click += ls[i].serviceTime;
+        }
+    }
 }
 
 // ref: http://stackoverflow.com/a/1293163/2343
