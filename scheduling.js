@@ -185,6 +185,12 @@ function saveProcessInfos() {
     navigator.clipboard.writeText(infos)
 }
 
+function changeAlgorithm() {
+    console.log("do changeAlgorithm()");
+    uncalculate();
+    updateTable();
+}
+
 function commitProcessInfos() {
     commited = true;
     updateTable();
@@ -198,6 +204,7 @@ function commitProcessInfos() {
     updateTable();
 }
 function calculate(algorithm) {
+    console.log("do calculate()");
     var ls = [];
     console.log(processes);
     for (var i = 0; i < processes.length; i++) {
@@ -234,6 +241,15 @@ function calculate(algorithm) {
     }
     calculateRest();
 }
+function uncalculate() {
+    console.log("do uncalculate()");
+    for (var i = 0; i < processes.length; i++) {
+        processes[i].completionTime = completionTimeDefault;
+        processes[i].turnaroundTime = turnaroundTimeDefault;
+        processes[i].turnaroundTimeWeight = turnaroundTimeWeightDefault;
+    }
+}
+
 function calculateRest() {
     for (var i = 0; i < processes.length; i++) {
         var process = processes[i];
