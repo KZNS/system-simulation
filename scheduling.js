@@ -8,7 +8,7 @@ var arrivalTimeDefault;
 var serviceTimeDefault;
 var completionTimeDefault;
 var turnaroundTimeDefault;
-var turnaroundTimeRightsDefault;
+var turnaroundTimeWeightDefault;
 
 var processInfoFormat;
 
@@ -19,7 +19,7 @@ function getPageElements() {
     serviceTimeDefault = $(".serviceTime:first").val();
     completionTimeDefault = $(".completionTime:first").text();
     turnaroundTimeDefault = $(".turnaroundTime:first").text();
-    turnaroundTimeRightsDefault = $(".turnaroundTimeRights:first").text();
+    turnaroundTimeWeightDefault = $(".turnaroundTimeWeight:first").text();
 
     processInfoFormat = $(".processInfo:first").clone();
 }
@@ -32,7 +32,7 @@ function newProcess() {
         serviceTime: serviceTimeDefault,
         completionTime: completionTimeDefault,
         turnaroundTime: turnaroundTimeDefault,
-        turnaroundTimeRights: turnaroundTimeRightsDefault
+        turnaroundTimeWeight: turnaroundTimeWeightDefault
     };
     return p;
 }
@@ -44,7 +44,7 @@ function formatFitProcess(i) {
     processInfoFormat.find(".serviceTime").attr("value", processes[i].serviceTime);
     processInfoFormat.find(".completionTime").text(processes[i].completionTime);
     processInfoFormat.find(".turnaroundTime").text(processes[i].turnaroundTime);
-    processInfoFormat.find(".turnaroundTimeRights").text(processes[i].turnaroundTimeRights);
+    processInfoFormat.find(".turnaroundTimeWeight").text(processes[i].turnaroundTimeWeight);
 }
 
 function updateTable() {
@@ -229,13 +229,16 @@ function calculate(algorithm) {
     else if (algorithm == 'SJF') {
         calculateSJF(ls);
     }
+    else if (algorithm == 'HRN') {
+        calculateHRN(ls);
+    }
     calculateRest();
 }
 function calculateRest() {
     for (var i = 0; i < processes.length; i++) {
         var process = processes[i];
         process.turnaroundTime = process.completionTime - process.arrivalTime;
-        process.turnaroundTimeRights = (process.turnaroundTime / process.serviceTime).toFixed(2);
+        process.turnaroundTimeWeight = (process.turnaroundTime / process.serviceTime).toFixed(2);
     }
 }
 function calculateFCFS(ls) {
@@ -319,6 +322,38 @@ function calculateSJF(ls) {
         clock += SJFls[minone].serviceTime;
         processes[SJFls[minone].id].completionTime = clock;
         SJFls.splice(minone, 1);
+    }
+}
+function HRNWeight(clock, arrivalTime, serviceTime) {
+    return (clock - arrivalTime + serviceTime) / serviceTime;
+}
+function calculateHRN(ls) {
+    console.log("calculating HRN");
+    var clock = 0;
+    var HRNls = [];
+    var i = 0;
+    while (i < ls.length || HRNls.length > 0) {
+        if (HRNls.length == 0) {
+            clock = Math.max(clock, ls[i].arrivalTime);
+        }
+        while (i < ls.length && clock >= ls[i].arrivalTime) {
+            HRNls.push({
+                process: ls[i],
+                weight: 0
+            });
+            i++;
+        }
+        var minone = 0;
+        HRNls[0].weight = HRNWeight(clock, HRNls[0].process.arrivalTime, HRNls[0].process.serviceTime);
+        for (var j = 1; j < HRNls.length; j++) {
+            HRNls[j].weight = HRNWeight(clock, HRNls[j].process.arrivalTime, HRNls[j].process.serviceTime);
+            if (HRNls[j].weight > HRNls[minone].weight) {
+                minone = j;
+            }
+        }
+        clock += HRNls[minone].process.serviceTime;
+        processes[HRNls[minone].process.id].completionTime = clock;
+        HRNls.splice(minone, 1);
     }
 }
 
