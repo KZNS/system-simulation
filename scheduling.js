@@ -526,7 +526,7 @@ function renderSimulation() {
         processProgressFormatFit(i);
         processorSimulationTbody.append(processProgressFormat.prop('outerHTML'));
     }
-
+    $('#SimulationClock').val(SimulationClock);
 }
 function updateSimulation() {
     console.log("do updateSimulation()");
@@ -535,6 +535,7 @@ function updateSimulation() {
         $('#' + p.progressId).find('.progress-bar').css('width', (p.remainingTime / p.serviceTime * 100) + '%');
         $('#' + p.progressId).find('.progress-bar').text(p.remainingTime);
     }
+    $('#SimulationClock').val(SimulationClock);
 }
 
 function nextStep() {
