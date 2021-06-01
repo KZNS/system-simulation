@@ -130,11 +130,11 @@ function updateTable() {
 
 /* 输入信息处理
  */
-var NonNegInt = /^(0|[1-9]\d*)$/;
+var positiveInt = /^([1-9]\d*)$/;
 var hasWrongProcessInfo = false;
-function checkNonNegInt(data) {
+function checkData(data) {
     var value = $(data).val();
-    if (NonNegInt.test(value) || (!commited && value == "")) {
+    if (positiveInt.test(value) || (!commited && value == "")) {
         console.log("ok " + value);
         $(data).removeClass("is-invalid");
     }
@@ -590,9 +590,7 @@ function checkArrivalTime() {
     while (orderedProcesses.length > 0) {
         var p = orderedProcesses[0].process;
         if (SimulationClock >= p.arrivalTime) {
-            if (p.serviceTime != 0) {
-                simulationLs.push(newSimulationItem(p));
-            }
+            simulationLs.push(newSimulationItem(p));
             orderedProcesses.shift();
         }
         else {
