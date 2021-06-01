@@ -11,6 +11,10 @@ var turnaroundTimeDefault;
 var turnaroundTimeWeightDefault;
 
 var processInfoFormat;
+var processProgressFormat;
+
+var processProgressMax;
+var SimulationClock;
 
 function getPageElements() {
     console.log("do getPageElements()");
@@ -22,6 +26,8 @@ function getPageElements() {
     turnaroundTimeWeightDefault = $(".turnaroundTimeWeight:first").text();
 
     processInfoFormat = $(".processInfo:first").clone();
+
+    processProgressFormat = $('.processProgress:first').clone();
 }
 
 function newProcess() {
@@ -32,12 +38,13 @@ function newProcess() {
         serviceTime: serviceTimeDefault,
         completionTime: completionTimeDefault,
         turnaroundTime: turnaroundTimeDefault,
-        turnaroundTimeWeight: turnaroundTimeWeightDefault
+        turnaroundTimeWeight: turnaroundTimeWeightDefault,
+        remainingTime: 0
     };
     return p;
 }
 
-function formatFitProcess(i) {
+function processInfoFormatFit(i) {
     processInfoFormat.find("th").text(i + 1);
     processInfoFormat.attr("id", processes[i].processId);
     processInfoFormat.find(".arrivalTime").attr("value", processes[i].arrivalTime);
@@ -45,6 +52,14 @@ function formatFitProcess(i) {
     processInfoFormat.find(".completionTime").text(processes[i].completionTime);
     processInfoFormat.find(".turnaroundTime").text(processes[i].turnaroundTime);
     processInfoFormat.find(".turnaroundTimeWeight").text(processes[i].turnaroundTimeWeight);
+}
+function processProgressFormatFit(i) {
+    var p = processes[i];
+    processProgressFormat.find('th').text(i + 1);
+    processProgressFormat.find('.progress').css('width', (p.serviceTime / processProgressMax * 80) + '%');
+    processProgressFormat.find('.progress-bar').css('width', (p.remainingTime / p.serviceTime * 100) + '%');
+    processProgressFormat.find('.progress-bar').text(p.remainingTime);
+    processProgressFormat.find('.serviceTime').text(p.serviceTime);
 }
 
 function updateTable() {
@@ -55,7 +70,7 @@ function updateTable() {
 
     for (i = 0; i < processes.length; i++) {
         processes[i].processId = "process" + i;
-        formatFitProcess(i);
+        processInfoFormatFit(i);
         processInfosTbody.append(processInfoFormat.prop('outerHTML'));
     }
     hasWrongProcessInfo = false;
@@ -198,10 +213,19 @@ function commitProcessInfos() {
         console.log("hasWrongProcessInfo");
         return;
     }
+    commited = false;
     var algorithm = $("select").val();
     console.log(algorithm);
     calculate(algorithm);
     updateTable();
+
+    processProgressMax = 0;
+    for (var i = 0; i < processes.length; i++) {
+        processes[i].remainingTime = processes[i].serviceTime;
+        processProgressMax = Math.max(processProgressMax, processes[i].serviceTime);
+    }
+    SimulationClock = 0;
+    updateSimulation();
 }
 function calculate(algorithm) {
     console.log("do calculate()");
@@ -455,4 +479,17 @@ function CSVToArray(strData, strDelimiter) {
 
     // Return the parsed data.
     return (arrData);
+}
+
+
+function updateSimulation() {
+    console.log("do updateSimulation()");
+
+    var processorSimulationTbody = $('#processorSimulation').find('tbody');
+    processorSimulationTbody.empty();
+
+    for (var i = 0; i < processes.length; i++) {
+        processProgressFormatFit(i);
+        processorSimulationTbody.append(processProgressFormat.prop('outerHTML'));
+    }
 }

@@ -152,26 +152,26 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-1">
-                #
-            </div>
-            <div class="col">
-                剩余时长
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-1">
-                1
-            </div>
-            <div class="col">
-                <div class="progress" style="width: 80%; display: inline-block;">
-                    <div class="progress-bar" role="progressbar" style="width: 10%" aria-valuenow="25" aria-valuemin="0"
-                        aria-valuemax="100">10</div>
-                </div>
-                <div style="display: inline-block;">100</div>
-            </div>
-            <div class="col-1">
-            </div>
+            <table class="table table-striped" id="processorSimulation">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 50px;">#</th>
+                        <th scope="col">剩余时常</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="processProgress">
+                        <th scope="row">1</th>
+                        <td>
+                            <div class="progress" style="width: 80%; display: inline-block;">
+                                <div class="progress-bar" role="progressbar" style="width: 10%; transition: width 0.8s;"
+                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">10</div>
+                            </div>
+                            <div class="serviceTime" style="display: inline-block;">100</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
