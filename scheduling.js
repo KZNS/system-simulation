@@ -378,6 +378,9 @@ function calculateSJF(ls) {
 function HRNWeight(clock, arrivalTime, serviceTime) {
     return (clock - arrivalTime + serviceTime) / serviceTime;
 }
+function HRNWeight(clock, p) {
+    return (clock - p.arrivalTime + p.serviceTime) / p.serviceTime;
+}
 function calculateHRN(ls) {
     console.log("calculating HRN");
     var clock = 0;
@@ -611,6 +614,27 @@ function nextClockSJF() {
         processing = 0;
         for (var i = 1; i < simulationLs.length; i++) {
             if (simulationLs[i].process.serviceTime < simulationLs[processing].process.serviceTime) {
+                processing = i;
+            }
+        }
+    }
+    if (processing != -1) {
+        var p = simulationLs[processing].process;
+        p.remainingTime--;
+        if (p.remainingTime <= 0) {
+            simulationLs.splice(processing, 1);
+            processing = -1;
+        }
+    }
+}
+function nextClockHRN() {
+    console.log('do nextClockHRN()');
+    checkArrivalTime();
+    console.log(simulationLs);
+    if (processing == -1 && simulationLs.length > 0) {
+        processing = 0;
+        for (var i = 1; i < simulationLs.length; i++) {
+            if (HRNWeight(SimulationClock, simulationLs[i].process) > HRNWeight(SimulationClock, simulationLs[processing].process)) {
                 processing = i;
             }
         }
