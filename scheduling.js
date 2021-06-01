@@ -306,17 +306,15 @@ function commitProcessInfos() {
     algorithm = $("select").val();
     console.log(algorithm);
 
-    getOrderedProcesses();
-
     calculate();
     updateTable();
 
     initSimulation();
-    renderSimulation();
 }
 function uncommitProcessInfos() {
     uncalculate();
     simulating = false;
+    pausePlay();
 }
 
 /* 计算
@@ -351,6 +349,7 @@ function getOrderedProcesses() {
 }
 function calculate() {
     console.log("do calculate()");
+    getOrderedProcesses();
     if (algorithm == 'FCFS') {
         calculateFCFS(orderedProcesses);
     }
@@ -526,6 +525,7 @@ function processProgressFormatFit(i) {
 }
 function initSimulation() {
     console.log('do initSimulation()')
+    getOrderedProcesses();
     processProgressMax = 0;
     for (var i = 0; i < processes.length; i++) {
         processes[i].progressId = 'progress' + i;
@@ -536,6 +536,7 @@ function initSimulation() {
     simulationLs = [];
     simulating = true;
     processing = -1;
+    renderSimulation();
 }
 function renderSimulation() {
     console.log('do renderSimulation()');
@@ -670,4 +671,26 @@ function nextClockHRN() {
             processing = -1;
         }
     }
+}
+
+/* 自动播放
+ */
+var intervals = [];
+function autoPlay() {
+    console.log('do autoPlay()');
+    if (!simulating) {
+        return;
+    }
+    intervals.push(setInterval(nextStep, 1000));
+}
+function pausePlay() {
+    console.log('do pausePlay()');
+    while (intervals.length > 0) {
+        clearInterval(intervals.shift());
+    }
+}
+function resetSimulation() {
+    console.log('do resetSimulation()');
+    pausePlay();
+    initSimulation();
 }
