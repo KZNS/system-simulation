@@ -582,3 +582,26 @@ function nextClockFCFS() {
         }
     }
 }
+function nextClockRR() {
+    console.log('do nextClockRR()');
+    while (orderedProcesses.length > 0) {
+        var p = orderedProcesses[0].process;
+        if (SimulationClock >= p.arrivalTime) {
+            simulationLs.push(newSimulationItem(p));
+            orderedProcesses.shift();
+        }
+        else {
+            break;
+        }
+    }
+    console.log(simulationLs);
+    while (simulationLs.length > 0) {
+        var item = simulationLs.shift();
+        var p = item.process;
+        if (p.remainingTime > 0) {
+            p.remainingTime--;
+            simulationLs.push(item);
+            break;
+        }
+    }
+}
