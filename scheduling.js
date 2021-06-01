@@ -61,7 +61,7 @@ function processInfoFormatFit(i) {
 }
 function processProgressFormatFit(i) {
     var p = processes[i];
-    processProgressFormat.attr('id', 'progress' + i);
+    processProgressFormat.attr('id', p.progressId);
     processProgressFormat.find('th').text(i + 1);
     processProgressFormat.find('.progress').css('width', (p.serviceTime / processProgressMax * 80) + '%');
     processProgressFormat.find('.progress-bar').css('width', (p.remainingTime / p.serviceTime * 100) + '%');
@@ -76,6 +76,7 @@ function updateTable() {
     processInfosTbody.empty();
 
     for (i = 0; i < processes.length; i++) {
+        processes[i].id = i;
         processes[i].processId = "process" + i;
         processInfoFormatFit(i);
         processInfosTbody.append(processInfoFormat.prop('outerHTML'));
@@ -502,6 +503,7 @@ function initSimulation() {
     console.log('do initSimulation()')
     processProgressMax = 0;
     for (var i = 0; i < processes.length; i++) {
+        processes[i].progressId = 'progress' + i;
         processes[i].remainingTime = processes[i].serviceTime;
         processProgressMax = Math.max(processProgressMax, processes[i].serviceTime);
     }
@@ -523,6 +525,11 @@ function renderSimulation() {
 }
 function updateSimulation() {
     console.log("do updateSimulation()");
+    for (var i = 0; i < processes.length; i++) {
+        var p = processes[i];
+        $('#' + p.progressId).find('.progress-bar').css('width', (p.remainingTime / p.serviceTime * 100) + '%');
+        $('#' + p.progressId).find('.progress-bar').text(p.remainingTime);
+    }
 }
 
 function nextStep() {
