@@ -89,6 +89,7 @@ function newProcessInfo() {
     console.log("do newProcessInfo()");
 
     processes.push(newProcess());
+    uncommitProcessInfos();
     updateTable();
 }
 function delProcessInfoThis(data) {
@@ -105,6 +106,7 @@ function delProcessInfoThis(data) {
     if (processes.length == 0) {
         processes.push(newProcess());
     }
+    uncommitProcessInfos();
     updateTable();
 }
 function delProcessInfoLast() {
@@ -114,6 +116,7 @@ function delProcessInfoLast() {
     if (processes.length == 0) {
         processes.push(newProcess());
     }
+    uncommitProcessInfos();
     updateTable();
 }
 function delProcessInfoAll() {
@@ -122,6 +125,7 @@ function delProcessInfoAll() {
     processes = [];
     processes.push(newProcess());
     commited = false;
+    uncommitProcessInfos();
     updateTable();
 }
 
@@ -177,6 +181,7 @@ function initModal(data) {
 }
 function inputProcessInfos(data) {
     console.log("do inputProcessInfos()");
+    uncommitProcessInfos();
     var infos = $("#inputProcessInfos").val();
     processes = [];
     console.log(infos);
@@ -210,7 +215,7 @@ function saveProcessInfos() {
 
 function changeAlgorithm() {
     console.log("do changeAlgorithm()");
-    uncalculate();
+    uncommitProcessInfos();
     updateTable();
 }
 
@@ -232,6 +237,10 @@ function commitProcessInfos() {
 
     initSimulation();
     renderSimulation();
+}
+function uncommitProcessInfos() {
+    uncalculate();
+    simulating = false;
 }
 function getOrderedProcesses() {
     console.log('do getOrderedProcesses()');
