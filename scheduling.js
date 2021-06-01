@@ -1,6 +1,7 @@
 var NonNegInt = /^(0|[1-9]\d*)$/;
 
 var processes = [];
+var orderedProcesses = [];
 var commited = false;
 var hasWrongProcessInfo = false;
 
@@ -12,6 +13,8 @@ var turnaroundTimeWeightDefault;
 
 var processInfoFormat;
 var processProgressFormat;
+
+var algorithm;
 
 var processProgressMax;
 var SimulationClock;
@@ -214,33 +217,31 @@ function commitProcessInfos() {
         return;
     }
     commited = false;
-    var algorithm = $("select").val();
+    algorithm = $("select").val();
     console.log(algorithm);
-    calculate(algorithm);
+
+    getOrderedProcesses();
+
+    calculate();
     updateTable();
 
-    processProgressMax = 0;
-    for (var i = 0; i < processes.length; i++) {
-        processes[i].remainingTime = processes[i].serviceTime;
-        processProgressMax = Math.max(processProgressMax, processes[i].serviceTime);
-    }
-    SimulationClock = 0;
+    initSimulation();
     updateSimulation();
 }
-function calculate(algorithm) {
-    console.log("do calculate()");
-    var ls = [];
+function getOrderedProcesses() {
+    console.log('do getOrderedProcesses()');
     console.log(processes);
+    orderedProcesses = [];
     for (var i = 0; i < processes.length; i++) {
         processes[i].arrivalTime = parseInt(processes[i].arrivalTime);
         processes[i].serviceTime = parseInt(processes[i].serviceTime);
-        ls.push({
+        orderedProcesses.push({
             id: i,
             arrivalTime: processes[i].arrivalTime,
             serviceTime: processes[i].serviceTime
         });
     }
-    ls.sort(
+    orderedProcesses.sort(
         function (a, b) {
             if (a.arrivalTime == b.arrivalTime) {
                 return a.id - b.id;
@@ -250,18 +251,22 @@ function calculate(algorithm) {
             }
         }
     )
-    console.log(ls);
+    console.log(orderedProcesses);
+
+}
+function calculate() {
+    console.log("do calculate()");
     if (algorithm == 'FCFS') {
-        calculateFCFS(ls);
+        calculateFCFS(orderedProcesses);
     }
     else if (algorithm == 'RR') {
-        calculateRR(ls);
+        calculateRR(orderedProcesses);
     }
     else if (algorithm == 'SJF') {
-        calculateSJF(ls);
+        calculateSJF(orderedProcesses);
     }
     else if (algorithm == 'HRN') {
-        calculateHRN(ls);
+        calculateHRN(orderedProcesses);
     }
     calculateRest();
 }
@@ -492,4 +497,14 @@ function updateSimulation() {
         processProgressFormatFit(i);
         processorSimulationTbody.append(processProgressFormat.prop('outerHTML'));
     }
+}
+
+function initSimulation() {
+    console.log('do initSimulation()')
+    processProgressMax = 0;
+    for (var i = 0; i < processes.length; i++) {
+        processes[i].remainingTime = processes[i].serviceTime;
+        processProgressMax = Math.max(processProgressMax, processes[i].serviceTime);
+    }
+    SimulationClock = 0;
 }
