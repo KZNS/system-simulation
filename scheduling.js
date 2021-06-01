@@ -494,6 +494,7 @@ function CSVToArray(strData, strDelimiter) {
 
 
 var simulationLs = [];
+var processing = -1;
 
 function newSimulationItem(p) {
     return { process: p, weight: 0 };
@@ -510,6 +511,7 @@ function initSimulation() {
     SimulationClock = 0;
     simulationLs = [];
     simulating = true;
+    processing = -1;
 }
 function renderSimulation() {
     console.log('do renderSimulation()');
@@ -557,18 +559,23 @@ function nextClock() {
     }
     SimulationClock++;
 }
-function nextClockFCFS() {
-    console.log('do nextClockFCFS()');
+function checkArrivalTime() {
     while (orderedProcesses.length > 0) {
         var p = orderedProcesses[0].process;
         if (SimulationClock >= p.arrivalTime) {
-            simulationLs.push(newSimulationItem(p));
+            if (p.serviceTime != 0) {
+                simulationLs.push(newSimulationItem(p));
+            }
             orderedProcesses.shift();
         }
         else {
             break;
         }
     }
+}
+function nextClockFCFS() {
+    console.log('do nextClockFCFS()');
+    checkArrivalTime();
     console.log(simulationLs);
     while (simulationLs.length > 0) {
         var p = simulationLs[0].process;
@@ -584,16 +591,7 @@ function nextClockFCFS() {
 }
 function nextClockRR() {
     console.log('do nextClockRR()');
-    while (orderedProcesses.length > 0) {
-        var p = orderedProcesses[0].process;
-        if (SimulationClock >= p.arrivalTime) {
-            simulationLs.push(newSimulationItem(p));
-            orderedProcesses.shift();
-        }
-        else {
-            break;
-        }
-    }
+    checkArrivalTime();
     console.log(simulationLs);
     while (simulationLs.length > 0) {
         var item = simulationLs.shift();
@@ -602,6 +600,27 @@ function nextClockRR() {
             p.remainingTime--;
             simulationLs.push(item);
             break;
+        }
+    }
+}
+function nextClockSJF() {
+    console.log('do nextClockSJF()');
+    checkArrivalTime();
+    console.log(simulationLs);
+    if (processing == -1 && simulationLs.length > 0) {
+        processing = 0;
+        for (var i = 1; i < simulationLs.length; i++) {
+            if (simulationLs[i].process.serviceTime < simulationLs[processing].process.serviceTime) {
+                processing = i;
+            }
+        }
+    }
+    if (processing != -1) {
+        var p = simulationLs[processing].process;
+        p.remainingTime--;
+        if (p.remainingTime <= 0) {
+            simulationLs.splice(processing, 1);
+            processing = -1;
         }
     }
 }
