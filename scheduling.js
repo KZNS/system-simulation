@@ -18,6 +18,7 @@ var algorithm;
 
 var processProgressMax;
 var SimulationClock;
+var simulating = false;
 
 function getPageElements() {
     console.log("do getPageElements()");
@@ -36,7 +37,9 @@ function getPageElements() {
 function newProcess() {
     console.log("do newProcess()");
     var p = {
+        id: 0,
         processId: "",
+        progressId: "",
         arrivalTime: arrivalTimeDefault,
         serviceTime: serviceTimeDefault,
         completionTime: completionTimeDefault,
@@ -58,6 +61,7 @@ function processInfoFormatFit(i) {
 }
 function processProgressFormatFit(i) {
     var p = processes[i];
+    processProgressFormat.attr('id', 'progress' + i);
     processProgressFormat.find('th').text(i + 1);
     processProgressFormat.find('.progress').css('width', (p.serviceTime / processProgressMax * 80) + '%');
     processProgressFormat.find('.progress-bar').css('width', (p.remainingTime / p.serviceTime * 100) + '%');
@@ -226,7 +230,7 @@ function commitProcessInfos() {
     updateTable();
 
     initSimulation();
-    updateSimulation();
+    renderSimulation();
 }
 function getOrderedProcesses() {
     console.log('do getOrderedProcesses()');
@@ -237,6 +241,7 @@ function getOrderedProcesses() {
         processes[i].serviceTime = parseInt(processes[i].serviceTime);
         orderedProcesses.push({
             id: i,
+            process: processes[i],
             arrivalTime: processes[i].arrivalTime,
             serviceTime: processes[i].serviceTime
         });
@@ -487,16 +492,10 @@ function CSVToArray(strData, strDelimiter) {
 }
 
 
-function updateSimulation() {
-    console.log("do updateSimulation()");
+var simulationLs = [];
 
-    var processorSimulationTbody = $('#processorSimulation').find('tbody');
-    processorSimulationTbody.empty();
-
-    for (var i = 0; i < processes.length; i++) {
-        processProgressFormatFit(i);
-        processorSimulationTbody.append(processProgressFormat.prop('outerHTML'));
-    }
+function newSimulationItem(p) {
+    return { process: p, weight: 0 };
 }
 
 function initSimulation() {
@@ -507,4 +506,72 @@ function initSimulation() {
         processProgressMax = Math.max(processProgressMax, processes[i].serviceTime);
     }
     SimulationClock = 0;
+    simulationLs = [];
+    simulating = true;
+}
+function renderSimulation() {
+    console.log('do renderSimulation()');
+    console.log(processes);
+    var processorSimulationTbody = $('#processorSimulation').find('tbody');
+    processorSimulationTbody.empty();
+
+    for (var i = 0; i < processes.length; i++) {
+        processProgressFormatFit(i);
+        processorSimulationTbody.append(processProgressFormat.prop('outerHTML'));
+    }
+
+}
+function updateSimulation() {
+    console.log("do updateSimulation()");
+}
+
+function nextStep() {
+    console.log('do nextStep()');
+    if (!simulating) {
+        return;
+    }
+    nextClock();
+    updateSimulation();
+}
+
+function nextClock() {
+    console.log('do nextClock()');
+    if (algorithm == 'FCFS') {
+        nextClockFCFS();
+    }
+    else if (algorithm == 'RR') {
+        nextClockRR();
+    }
+    else if (algorithm == 'SJF') {
+        nextClockSJF();
+    }
+    else if (algorithm == 'HRN') {
+        nextClockHRN();
+    }
+    SimulationClock++;
+}
+function nextClockFCFS() {
+    console.log('do nextClockFCFS()');
+    while (orderedProcesses.length > 0) {
+        var p = orderedProcesses[0].process;
+        if (SimulationClock >= p.arrivalTime) {
+            simulationLs.push(newSimulationItem(p));
+            orderedProcesses.shift();
+        }
+        else {
+            break;
+        }
+    }
+    console.log(simulationLs);
+    while (simulationLs.length > 0) {
+        var p = simulationLs[0].process;
+        console.log(p);
+        if (p.remainingTime > 0) {
+            p.remainingTime--;
+            break;
+        }
+        else {
+            simulationLs.shift();
+        }
+    }
 }
