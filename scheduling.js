@@ -291,6 +291,33 @@ function CSVToArray(strData, strDelimiter) {
     // Return the parsed data.
     return (arrData);
 }
+function sortProcessInfos() {
+    console.log("do sortProcessInfos()");
+    processes.sort(
+        function (a, b) {
+            var aT, bT;
+            if (positiveInt.test(a.arrivalTime)) {
+                aT = parseInt(a.arrivalTime);
+            }
+            else {
+                aT = 1000000;
+            }
+            if (positiveInt.test(b.arrivalTime)) {
+                bT = parseInt(b.arrivalTime);
+            }
+            else {
+                bT = 1000000;
+            }
+            if (aT == bT) {
+                return a.id - b.id;
+            }
+            else {
+                return aT - bT;
+            }
+        }
+    )
+    updateTable();
+}
 
 /* 数据提交
  */
