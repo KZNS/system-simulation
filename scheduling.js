@@ -553,7 +553,8 @@ function processProgressFormatFit(i) {
     processProgressFormat.find('.serviceTime').text(p.serviceTime);
 }
 function initSimulation() {
-    console.log('do initSimulation()')
+    console.log('do initSimulation()');
+    pausePlay();
     getOrderedProcesses();
     processProgressMax = 0;
     for (var i = 0; i < processes.length; i++) {
