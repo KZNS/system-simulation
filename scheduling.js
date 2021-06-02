@@ -519,6 +519,7 @@ function processProgressFormatFit(i) {
     var p = processes[i];
     processProgressFormat.attr('id', p.progressId);
     processProgressFormat.find('th').text(i + 1);
+    processProgressFormat.find('.arrivalTime').text(p.arrivalTime);
     processProgressFormat.find('.progress').css('width', (p.serviceTime / processProgressMax * 80) + '%');
     processProgressFormat.find('.progress-bar').css('width', (p.remainingTime / p.serviceTime * 100) + '%');
     processProgressFormat.find('.progress-bar').text(p.remainingTime);
