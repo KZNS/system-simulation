@@ -1,14 +1,25 @@
-/* 页面初始化
+/**
+ * @file 处理器调度页面控制、模拟动画
+ * @author KZNS
  */
+
+// --------------------------------
+// 页面初始化
+// --------------------------------
+
+// 页面格式模板
 var processInfoFormat;
 var processProgressFormat;
-
+// 进程信息默认值
 var arrivalTimeDefault;
 var serviceTimeDefault;
 var completionTimeDefault;
 var turnaroundTimeDefault;
 var turnaroundTimeWeightDefault;
-
+/**
+ * 获取html页面中的dom元素，
+ * 根据dom设置页面格式模板，进程信息默认值
+ */
 function getPageElements() {
     console.log("do getPageElements()");
 
@@ -22,6 +33,9 @@ function getPageElements() {
 
     processProgressFormat = $('.processProgress:first').clone();
 }
+/**
+ * 初始化页面
+ */
 function initPage() {
     console.log("do initPage()");
 
@@ -30,18 +44,32 @@ function initPage() {
     updateTable();
 }
 
-/* 算法选择
- */
+// --------------------------------
+// 算法选择
+// --------------------------------
+
+// 选择的算法名称
 var algorithm;
+/**
+ * 修改选择算法时触发
+ * 取消提交进程信息
+ */
 function changeAlgorithm() {
     console.log("do changeAlgorithm()");
     uncommitProcessInfos();
     updateTable();
 }
 
-/* 进程信息表格
- */
+// --------------------------------
+// 进程信息输入表格
+// --------------------------------
+
+// 进程信息列表
 var processes = [];
+/**
+ * 生成一个新process元素并返回
+ * @returns 一个新procss元素
+ */
 function newProcess() {
     console.log("do newProcess()");
     var p = {
@@ -57,6 +85,9 @@ function newProcess() {
     };
     return p;
 }
+/**
+ * 添加一行表格在最后
+ */
 function newProcessInfo() {
     console.log("do newProcessInfo()");
 
@@ -64,6 +95,10 @@ function newProcessInfo() {
     uncommitProcessInfos();
     updateTable();
 }
+/**
+ * 删除表格当前行
+ * @param {DOM} data 当前DOM元素
+ */
 function delProcessInfoThis(data) {
     console.log("do delProcessInfoThis()");
 
@@ -81,6 +116,9 @@ function delProcessInfoThis(data) {
     uncommitProcessInfos();
     updateTable();
 }
+/**
+ * 删除表格最后一行
+ */
 function delProcessInfoLast() {
     console.log("do delProcessInfoLast()");
 
@@ -91,6 +129,9 @@ function delProcessInfoLast() {
     uncommitProcessInfos();
     updateTable();
 }
+/**
+ * 删除全部表格
+ */
 function delProcessInfoAll() {
     console.log("do delProcessInfoAll()");
 
@@ -101,7 +142,12 @@ function delProcessInfoAll() {
     updateTable();
 }
 
-/* 进程信息表格显示
+// --------------------------------
+// 进程信息表格显示
+// --------------------------------
+/**
+ * 将进程信息填入格式模板
+ * @param {Number} i 进程信息的数组下标
  */
 function processInfoFormatFit(i) {
     processInfoFormat.find("th").text(i + 1);
@@ -112,6 +158,9 @@ function processInfoFormatFit(i) {
     processInfoFormat.find(".turnaroundTime").text(processes[i].turnaroundTime);
     processInfoFormat.find(".turnaroundTimeWeight").text(processes[i].turnaroundTimeWeight);
 }
+/**
+ * 刷新表格
+ */
 function updateTable() {
     console.log("do updateTable()");
 
@@ -128,10 +177,18 @@ function updateTable() {
     processInfosTbody.find("input").trigger("oninput");
 }
 
-/* 输入信息处理
- */
+// --------------------------------
+// 输入信息处理
+// --------------------------------
+
+// 正整数格式
 var positiveInt = /^([1-9]\d*)$/;
+// 错误数据有无标记
 var hasWrongProcessInfo = false;
+/**
+ * 检查当前输入是否合法
+ * @param {DOM} data 当前DOM元素
+ */
 function checkData(data) {
     var value = $(data).val();
     if (positiveInt.test(value) || (!commited && value == "")) {
@@ -146,6 +203,10 @@ function checkData(data) {
         }
     }
 }
+/**
+ * 绑定页面元素和进程信息列表
+ * @param {DOM} data 当前DOM元素
+ */
 function bindingProcess(data) {
     console.log("do bindingProcess()");
     var value = $(data).val();
@@ -168,13 +229,22 @@ function bindingProcess(data) {
     console.log(processes[index]);
 }
 
-/* 批量读入和保存进程信息
+// --------------------------------
+// 批量读入和保存进程信息
+// --------------------------------
+/**
+ * 初始化模态框
+ * @param {DOM} data 当前DOM元素
  */
 function initModal(data) {
     console.log("do initModal()");
     var target = $(data).attr("data-bs-target");
     $(target).find(".alert").removeClass("show");
 }
+/**
+ * 处理批量输入的进程信息数据
+ * @param {DOM} data 当前DOM元素
+ */
 function inputProcessInfos(data) {
     console.log("do inputProcessInfos()");
     uncommitProcessInfos();
@@ -195,10 +265,13 @@ function inputProcessInfos(data) {
     if (processes.length == 0) {
         processes.push(newProcess());
     }
-    // 关闭
+    // 关闭模态框
     $("#inputProcessInfos-Modal").modal("hide");
     updateTable();
 }
+/**
+ * 保存当前进程信息到剪贴板
+ */
 function saveProcessInfos() {
     console.log("do saveProcessInfos()");
     var infos = processes[0].arrivalTime + ',' + processes[0].serviceTime;
@@ -208,10 +281,15 @@ function saveProcessInfos() {
 
     navigator.clipboard.writeText(infos)
 }
-// ref: http://stackoverflow.com/a/1293163/2343
-// This will parse a delimited string into an array of
-// arrays. The default delimiter is the comma, but this
-// can be overriden in the second argument.
+/**
+ * ref: http://stackoverflow.com/a/1293163/2343
+ * This will parse a delimited string into an array of
+ * arrays. The default delimiter is the comma, but this
+ * can be overriden in the second argument.
+ * @param {String} strData 输入数据
+ * @param {String} strDelimiter 分隔符
+ * @returns 处理后的列表
+ */
 function CSVToArray(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
     // then default to comma.
@@ -291,6 +369,9 @@ function CSVToArray(strData, strDelimiter) {
     // Return the parsed data.
     return (arrData);
 }
+/**
+ * 排序进程信息，按照到达时间
+ */
 function sortProcessInfos() {
     console.log("do sortProcessInfos()");
     processes.sort(
@@ -319,9 +400,16 @@ function sortProcessInfos() {
     updateTable();
 }
 
-/* 数据提交
- */
+// --------------------------------
+// 数据提交
+// --------------------------------
+
+// 是否正在提交
 var commited = false;
+/**
+ * 提交数据
+ * 检查数据完整性，计算调度结果，初始化模拟部分
+ */
 function commitProcessInfos() {
     commited = true;
     updateTable();
@@ -344,9 +432,15 @@ function uncommitProcessInfos() {
     pausePlay();
 }
 
-/* 计算
- */
+// --------------------------------
+// 计算调度信息
+// --------------------------------
+
+// 按照到达时间排序后的进程信息列表
 var orderedProcesses = [];
+/**
+ * 获得按照到达时间排序的进程信息列表
+ */
 function getOrderedProcesses() {
     console.log('do getOrderedProcesses()');
     console.log(processes);
@@ -374,6 +468,9 @@ function getOrderedProcesses() {
     console.log(orderedProcesses);
 
 }
+/**
+ * 计算机进程调度信息
+ */
 function calculate() {
     console.log("do calculate()");
     getOrderedProcesses();
@@ -391,6 +488,9 @@ function calculate() {
     }
     calculateRest();
 }
+/**
+ * 删除进程调度结果
+ */
 function uncalculate() {
     console.log("do uncalculate()");
     for (var i = 0; i < processes.length; i++) {
@@ -399,13 +499,29 @@ function uncalculate() {
         processes[i].turnaroundTimeWeight = turnaroundTimeWeightDefault;
     }
 }
-
+/**
+ * 计算HRN优先权
+ * @param {Number} clock 当前时钟
+ * @param {Number} arrivalTime 到达时间
+ * @param {Number} serviceTime 服务时间
+ * @returns HRN优先权
+ */
 function HRNWeight(clock, arrivalTime, serviceTime) {
     return (clock - arrivalTime + serviceTime) / serviceTime;
 }
+/**
+ * 计算HRN优先权
+ * @param {Number} clock 当前时钟
+ * @param {Process} p 进程信息
+ * @returns HRN优先权
+ */
 function HRNWeight(clock, p) {
     return (clock - p.arrivalTime + p.serviceTime) / p.serviceTime;
 }
+/**
+ * 根据FCFS计算调度信息
+ * @param {Array} ls 排序后进程信息列表
+ */
 function calculateFCFS(ls) {
     console.log("calculating FCFS");
     var clock = 0;
@@ -415,6 +531,10 @@ function calculateFCFS(ls) {
         clock += ls[i].serviceTime;
     }
 }
+/**
+ * 根据RR计算调度信息
+ * @param {Array} ls 排序后进程信息列表
+ */
 function calculateRR(ls) {
     console.log("calculating RR");
     var clock = 0;
@@ -465,6 +585,10 @@ function calculateRR(ls) {
         }
     }
 }
+/**
+ * 根据SJF计算调度信息
+ * @param {Array} ls 排序后进程信息列表
+ */
 function calculateSJF(ls) {
     console.log("calculating SJF");
     var clock = 0;
@@ -489,6 +613,10 @@ function calculateSJF(ls) {
         SJFls.splice(minone, 1);
     }
 }
+/**
+ * 根据SJF计算调度信息
+ * @param {Array} ls 排序后进程信息列表
+ */
 function calculateHRN(ls) {
     console.log("calculating HRN");
     var clock = 0;
@@ -518,6 +646,9 @@ function calculateHRN(ls) {
         HRNls.splice(minone, 1);
     }
 }
+/**
+ * 计算剩余调度信息
+ */
 function calculateRest() {
     for (var i = 0; i < processes.length; i++) {
         var process = processes[i];
@@ -527,21 +658,40 @@ function calculateRest() {
 }
 
 
-/* 模拟
- */
+// --------------------------------
+// 模拟
+// --------------------------------
+
+// 模拟器处理队列
 var simulationLs = [];
+// 模拟器时钟
 var SimulationClock;
+// 模拟中标记
 var simulating = false;
 
+// 操作记录
 var operationLogs = [];
+// 正在处理指针
 var processing = -1;
+// 进程服务时间最大值
 var processProgressMax;
 
-/* 模拟显示
+// --------------------------------
+// 模拟显示
+// --------------------------------
+
+/**
+ * 根据进程信息创建模拟器元素并返回
+ * @param {Process} p 进程信息
+ * @returns 新模拟器元素
  */
 function newSimulationItem(p) {
     return { process: p, weight: 0 };
 }
+/**
+ * 将进程信息装入模拟器模板
+ * @param {Number} i 进程信息列表下标
+ */
 function processProgressFormatFit(i) {
     var p = processes[i];
     processProgressFormat.attr('id', p.progressId);
@@ -552,6 +702,9 @@ function processProgressFormatFit(i) {
     processProgressFormat.find('.progress-bar').text(p.remainingTime);
     processProgressFormat.find('.serviceTime').text(p.serviceTime);
 }
+/**
+ * 初始化模拟器
+ */
 function initSimulation() {
     console.log('do initSimulation()');
     pausePlay();
@@ -569,6 +722,9 @@ function initSimulation() {
     processing = -1;
     renderSimulation();
 }
+/**
+ * 渲染模拟器
+ */
 function renderSimulation() {
     console.log('do renderSimulation()');
     console.log(processes);
@@ -581,6 +737,9 @@ function renderSimulation() {
     }
     $('#SimulationClock').val(SimulationClock);
 }
+/**
+ * 更新模拟器
+ */
 function updateSimulation() {
     console.log("do updateSimulation()");
     for (var i = 0; i < processes.length; i++) {
@@ -591,8 +750,9 @@ function updateSimulation() {
     $('#SimulationClock').val(SimulationClock);
 }
 
-/* 逐步模拟
- */
+// --------------------------------
+// 逐步模拟
+// --------------------------------
 function nextStep() {
     console.log('do nextStep()');
     if (!simulating) {
@@ -839,8 +999,9 @@ function runTo() {
     updateSimulation();
 }
 
-/* 自动播放
- */
+// --------------------------------
+// 自动播放
+// --------------------------------
 var intervals = [];
 function autoPlay() {
     console.log('do autoPlay()');
