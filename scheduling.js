@@ -818,6 +818,25 @@ function prevClockHRN() {
     }
     console.log(simulationLs);
 }
+function runTo() {
+    console.log("do runTo()");
+    if (!simulating) {
+        return;
+    }
+    pausePlay();
+    var clock = $('#SimulationClock').val();
+    if (!(positiveInt.test(clock) || clock == '0')) {
+        return;
+    }
+    clock = parseInt(clock);
+    while (SimulationClock < clock) {
+        nextClock();
+    }
+    while (SimulationClock > clock) {
+        prevClock();
+    }
+    updateSimulation();
+}
 
 /* 自动播放
  */
