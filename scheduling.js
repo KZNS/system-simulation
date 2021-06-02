@@ -506,6 +506,7 @@ var simulationLs = [];
 var SimulationClock;
 var simulating = false;
 
+var operationLogs = [];
 var processing = -1;
 var processProgressMax;
 
@@ -535,6 +536,7 @@ function initSimulation() {
     SimulationClock = 0;
     simulationLs = [];
     simulating = true;
+    operationLogs = [];
     processing = -1;
     renderSimulation();
 }
@@ -602,30 +604,34 @@ function nextClockFCFS() {
     console.log('do nextClockFCFS()');
     checkArrivalTime();
     console.log(simulationLs);
-    while (simulationLs.length > 0) {
+    if (simulationLs.length > 0) {
         var p = simulationLs[0].process;
         console.log(p);
-        if (p.remainingTime > 0) {
-            p.remainingTime--;
-            break;
-        }
-        else {
+        p.remainingTime--;
+        operationLogs.push(simulationLs[0]);
+        if (p.remainingTime <= 0) {
             simulationLs.shift();
         }
+    }
+    else {
+        operationLogs.push(null);
     }
 }
 function nextClockRR() {
     console.log('do nextClockRR()');
     checkArrivalTime();
     console.log(simulationLs);
-    while (simulationLs.length > 0) {
+    if (simulationLs.length > 0) {
         var item = simulationLs.shift();
         var p = item.process;
+        p.remainingTime--;
+        operationLogs.push(item);
         if (p.remainingTime > 0) {
-            p.remainingTime--;
             simulationLs.push(item);
-            break;
         }
+    }
+    else {
+        operationLogs.push(null);
     }
 }
 function nextClockSJF() {
@@ -643,10 +649,14 @@ function nextClockSJF() {
     if (processing != -1) {
         var p = simulationLs[processing].process;
         p.remainingTime--;
+        operationLogs.push(simulationLs[processing]);
         if (p.remainingTime <= 0) {
             simulationLs.splice(processing, 1);
             processing = -1;
         }
+    }
+    else {
+        operationLogs.push(null);
     }
 }
 function nextClockHRN() {
@@ -664,11 +674,127 @@ function nextClockHRN() {
     if (processing != -1) {
         var p = simulationLs[processing].process;
         p.remainingTime--;
+        operationLogs.push(simulationLs[processing]);
         if (p.remainingTime <= 0) {
             simulationLs.splice(processing, 1);
             processing = -1;
         }
     }
+    else {
+        operationLogs.push(null);
+    }
+}
+function prevStep() {
+    console.log('do lastStep()');
+    if (!simulating) {
+        return;
+    }
+    prevClock();
+    updateSimulation();
+}
+function prevClock() {
+    console.log('do lastClock()');
+    if (SimulationClock <= 0) {
+        return;
+    }
+    SimulationClock--;
+    if (algorithm == 'FCFS') {
+        prevClockFCFS();
+    }
+    else if (algorithm == 'RR') {
+        prevClockRR();
+    }
+    else if (algorithm == 'SJF') {
+        prevClockSJF();
+    }
+    else if (algorithm == 'HRN') {
+        prevClockHRN();
+    }
+}
+function uncheckArrivalTime() {
+    while (simulationLs.length > 0) {
+        var p = simulationLs[simulationLs.length - 1].process;
+        if (SimulationClock <= p.arrivalTime) {
+            orderedProcesses.unshift({
+                id: p.id,
+                process: p,
+                arrivalTime: p.arrivalTime,
+                serviceTime: p.serviceTime
+            });
+            simulationLs.pop();
+        }
+        else {
+            break;
+        }
+    }
+}
+function prevClockFCFS() {
+    console.log('do prevClockFCFS()');
+    var item = operationLogs.pop();
+    console.log(item);
+    if (!(item === null)) {
+        if (item.process.remainingTime <= 0) {
+            simulationLs.unshift(item);
+        }
+        item.process.remainingTime++;
+    }
+    console.log(simulationLs);
+    uncheckArrivalTime();
+}
+function prevClockRR() {
+    console.log('do prevClockRR()');
+    var item = operationLogs.pop();
+    if (!(item === null)) {
+        simulationLs.unshift(item);
+        if (!item.process.remainingTime >= 0) {
+            simulationLs.pop();
+        }
+        item.process.remainingTime++;
+    }
+    console.log(simulationLs);
+    uncheckArrivalTime();
+}
+function prevClockSJF() {
+    console.log('do prevClockSJF()');
+    var item = operationLogs.pop();
+    if (!(item === null)) {
+        if (processing != -1) {
+            item.process.remainingTime++;
+            if (item.process.remainingTime == item.process.serviceTime) {
+                processing = -1;
+            }
+        }
+        else {
+            item.process.remainingTime++;
+            if (item.process.remainingTime == 1) {
+                processing = 0;
+                simulationLs.unshift(item);
+            }
+        }
+    }
+    console.log(simulationLs);
+    uncheckArrivalTime();
+}
+function prevClockHRN() {
+    console.log('do prevClockHRN()');
+    var item = operationLogs.pop();
+    if (!(item === null)) {
+        if (processing != -1) {
+            item.process.remainingTime++;
+            if (item.process.remainingTime == item.process.serviceTime) {
+                processing = -1;
+            }
+        }
+        else {
+            item.process.remainingTime++;
+            if (item.process.remainingTime == 1) {
+                processing = 0;
+                simulationLs.unshift(item);
+            }
+        }
+    }
+    console.log(simulationLs);
+    uncheckArrivalTime();
 }
 
 /* 自动播放
