@@ -574,6 +574,7 @@ function nextStep() {
 }
 function nextClock() {
     console.log('do nextClock()');
+    checkArrivalTime();
     if (algorithm == 'FCFS') {
         nextClockFCFS();
     }
@@ -602,7 +603,6 @@ function checkArrivalTime() {
 }
 function nextClockFCFS() {
     console.log('do nextClockFCFS()');
-    checkArrivalTime();
     console.log(simulationLs);
     if (simulationLs.length > 0) {
         var p = simulationLs[0].process;
@@ -619,7 +619,6 @@ function nextClockFCFS() {
 }
 function nextClockRR() {
     console.log('do nextClockRR()');
-    checkArrivalTime();
     console.log(simulationLs);
     if (simulationLs.length > 0) {
         var item = simulationLs.shift();
@@ -636,7 +635,6 @@ function nextClockRR() {
 }
 function nextClockSJF() {
     console.log('do nextClockSJF()');
-    checkArrivalTime();
     console.log(simulationLs);
     if (processing == -1 && simulationLs.length > 0) {
         processing = 0;
@@ -661,7 +659,6 @@ function nextClockSJF() {
 }
 function nextClockHRN() {
     console.log('do nextClockHRN()');
-    checkArrivalTime();
     console.log(simulationLs);
     if (processing == -1 && simulationLs.length > 0) {
         processing = 0;
@@ -710,6 +707,7 @@ function prevClock() {
     else if (algorithm == 'HRN') {
         prevClockHRN();
     }
+    uncheckArrivalTime();
 }
 function uncheckArrivalTime() {
     while (simulationLs.length > 0) {
@@ -739,7 +737,6 @@ function prevClockFCFS() {
         item.process.remainingTime++;
     }
     console.log(simulationLs);
-    uncheckArrivalTime();
 }
 function prevClockRR() {
     console.log('do prevClockRR()');
@@ -752,7 +749,6 @@ function prevClockRR() {
         item.process.remainingTime++;
     }
     console.log(simulationLs);
-    uncheckArrivalTime();
 }
 function prevClockSJF() {
     console.log('do prevClockSJF()');
@@ -773,7 +769,6 @@ function prevClockSJF() {
         }
     }
     console.log(simulationLs);
-    uncheckArrivalTime();
 }
 function prevClockHRN() {
     console.log('do prevClockHRN()');
@@ -794,7 +789,6 @@ function prevClockHRN() {
         }
     }
     console.log(simulationLs);
-    uncheckArrivalTime();
 }
 
 /* 自动播放
