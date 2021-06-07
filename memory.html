@@ -27,7 +27,7 @@
             <h2>存储分配</h2>
         </div>
         <div class="row">
-            <table class="table table-striped" id="processInfos">
+            <table class="table table-striped" id="eventInfos">
                 <thead>
                     <tr>
                         <th scope="col">事件id</th>
@@ -38,23 +38,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="processInfo">
+                    <tr class="eventInfo" id="event1">
                         <th scope="row">1</th>
                         <td>
-                            <div class="input-group">
-                                选择
-                            </div>
+                            <select class="form-select">
+                                <option value="allocate">分配空间</option>
+                                <option value="recycle">回收空间</option>
+                            </select>
                         </td>
                         <td>
                             <div lass="input-group">
-                                <input type="text" class="form-control serviceTime" placeholder="服务时间"
-                                    oninput="checkData(this)" onchange="bindingProcess(this)" value="">
+                                <input type="text" class="form-control serviceTime" placeholder="空间大小"
+                                    oninput="checkData(this)" onchange="bindingEvent(this)" value="">
                             </div>
                         </td>
                         <td class="completionTime">
-                            选择
+                            <select class="form-select" disabled>
+                                <option value="0">--</option>
+                            </select>
                         </td>
-                        <td><button type="button" class="btn btn-danger" onclick="delProcessInfoThis(this)">删除</button>
+                        <td><button type="button" class="btn btn-danger" onclick="delEventInfoThis(this)">删除</button>
                         </td>
                     </tr>
                 </tbody>
