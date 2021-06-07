@@ -41,19 +41,19 @@
                     <tr class="eventInfo" id="event1">
                         <th scope="row">1</th>
                         <td>
-                            <select class="form-select">
+                            <select class="form-select eventType" onchange="bindingEvent(this)">
                                 <option value="allocate">分配空间</option>
                                 <option value="recycle">回收空间</option>
                             </select>
                         </td>
                         <td>
                             <div lass="input-group">
-                                <input type="text" class="form-control serviceTime" placeholder="空间大小"
+                                <input type="text" class="form-control memorySize" placeholder="空间大小"
                                     oninput="checkData(this)" onchange="bindingEvent(this)" value="">
                             </div>
                         </td>
-                        <td class="completionTime">
-                            <select class="form-select" disabled>
+                        <td>
+                            <select class="form-select delID" onchange="bindingEvent(this)" disabled>
                                 <option value="0">--</option>
                             </select>
                         </td>

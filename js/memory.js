@@ -10,6 +10,9 @@
 // 页面格式模板
 var eventInfoFormat;
 
+// 事件信息默认值
+var eventInfoDefault;
+
 /**
  * 获取html页面中的dom元素，
  * 根据dom设置页面格式模板，进程信息默认值
@@ -18,6 +21,7 @@ function getPageElements() {
     console.log('do getPageElements()');
 
     eventInfoFormat = $('.eventInfo:first').clone();
+    eventInfoDefault = $('.eventInfo:first .delID option').text();
 }
 /**
  * 初始化页面
@@ -46,7 +50,7 @@ function newEvent() {
     var e = {
         id: 0,
         eventID: '',
-        eventType: '',
+        eventType: 'allocate',
         memorySize: 0,
         delID: 0,
         setID: function (i) {
@@ -125,5 +129,94 @@ function updateTable() {
             eventInfoTr.attr('id', evn.eventID);
             eventInfoTr.find('th').text(evn.id);
         }
+    }
+}
+
+// --------------------------------
+// 输入信息处理
+// --------------------------------
+/**
+ * 绑定页面元素和进程信息列表
+ * @param {DOM} data 当前DOM元素
+ */
+function bindingEvent(data) {
+    console.log('do bindingEvent()');
+    var value = $(data).val();
+    var attr = "";
+    var eventID = $(data).parents("tr").attr("id");
+    var id = parseInt(eventID.replace(/[^0-9]/ig, ""));
+    var evn = events[id - 1];
+
+    if ($(data).hasClass('eventType')) {
+        evn.eventType = value;
+        changeEventType(evn);
+    }
+    else if ($(data).hasClass('memorySize')) {
+        evn.memorySize = parseInt(value);
+    }
+    else if ($(data).hasClass('delID')) {
+        evn.delID = parseInt(value);
+        changeDelID();
+    }
+    else {
+        console.log('wrong in bindingEvent()');
+        return;
+    }
+
+    console.log(evn);
+}
+
+function changeEventType(evn) {
+    console.log('do changeEventType()');
+    var eventInfoTr = $('#eventInfos tbody #' + evn.eventID);
+    if (evn.eventType == 'allocate') {
+        eventInfoTr.find('.memorySize').prop('disabled', false);
+        eventInfoTr.find('.delID').prop('disabled', true);
+    }
+    else if (evn.eventType == 'recycle') {
+        eventInfoTr.find('.memorySize').prop('disabled', true);
+        eventInfoTr.find('.delID').prop('disabled', false);
+    }
+    else {
+        console.log('changeEventType(): wrong eventType');
+    }
+    changeDelID();
+}
+function changeDelID() {
+    console.log('do changeDelID()');
+    var idList = [];
+    for (var i = 0; i < events.length; i++) {
+        var evn = events[i];
+        if (evn.eventType == 'allocate') {
+            idList.push(evn.id);
+        }
+        else if (evn.eventType == 'recycle') {
+            setDelIDOption(evn, idList);
+        }
+    }
+}
+function setDelIDOption(evn, idList) {
+    var delIDSelect = $('#' + evn.eventID + ' .delID');
+    delIDSelect.empty();
+    delIDSelect.append(
+        '<option value="' + 0 + '">' + eventInfoDefault + '</option>'
+    )
+    var flag = false;
+    for (var i = 0; i < idList.length; i++) {
+        delIDSelect.append(
+            '<option value="' + idList[i] + '">' + idList[i] + '</option>'
+        );
+        if (idList[i] === evn.delID) {
+            idList.splice(i, 1);
+            i--;
+            flag = true;
+        }
+    }
+    if (flag) {
+        delIDSelect.val(evn.delID);
+    }
+    else {
+        delIDSelect.val(0);
+        evn.delID = 0;
     }
 }
