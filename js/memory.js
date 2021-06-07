@@ -85,6 +85,25 @@ function delEventInfoThis(data) {
     $('#eventInfos #' + eventID).remove();
     var id = parseInt(eventID.replace(/[^0-9]/ig, ""));
     events.splice(id - 1, 1);
+
+    updateTable();
+}
+function newEventInfoAfterThis(data) {
+    console.log("do newEventInfoAfterThis()");
+
+    var eventID = $(data).parents("tr").attr("id");
+    console.log("new after " + eventID);
+
+    var tmp = eventID;
+    var id = parseInt(tmp.replace(/[^0-9]/ig, ""));
+    events.splice(id, 0, newEvent());
+    var evn = events[id];
+    evn.setID(id + 1);
+    eventInfoFormat.find('th').text(evn.id);
+    eventInfoFormat.attr('id', evn.eventID);
+    console.log(eventID);
+    $('#eventInfos #' + eventID).after(eventInfoFormat.prop('outerHTML'));
+
     updateTable();
 }
 /**
