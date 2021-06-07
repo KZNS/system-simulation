@@ -1,6 +1,11 @@
-# processor scheduling
+# 操作系统模拟
 
-## 实验需求
+- [1. processor scheduling](#1-processor-scheduling)
+  - [1.1. 实验需求](#11-实验需求)
+
+## 1. processor scheduling
+
+### 1.1. 实验需求
 
 1. 先来先服务FCFS
    1. 一个普通队列，非抢占
