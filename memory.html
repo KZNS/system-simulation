@@ -119,7 +119,7 @@
                 <button type="button" class="btn btn-primary" onclick="runTo()">跳转</button>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="text-align: center;">
             <div class="col-4">
                 内存映像图
             </div>
@@ -128,6 +128,17 @@
             </div>
             <div class="col-4">
                 未分配表
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div id="graph1" style="text-align: center;"></div>
+            </div>
+            <div class="col-4">
+                <div id="graph2" style="text-align: center;"></div>
+            </div>
+            <div class="col-4">
+                <div id="graph3" style="text-align: center;"></div>
             </div>
         </div>
     </div>
@@ -159,8 +170,23 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
     <script src="js/memory.js"></script>
     <script>initPage()</script>
+
+    <script>
+        d3.select("#graph1")
+            .graphviz()
+            .renderDot('digraph {a -> b}');
+        d3.select("#graph2")
+            .graphviz()
+            .renderDot('digraph {a -> b}');
+        d3.select("#graph3")
+            .graphviz()
+            .renderDot('digraph {a -> b}');
+    </script>
 </body>
 
 </html>
