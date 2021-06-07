@@ -51,7 +51,7 @@ function newEvent() {
         id: 0,
         eventID: '',
         eventType: 'allocate',
-        memorySize: 0,
+        memorySize: '',
         delID: 0,
         setID: function (i) {
             this.id = i;
@@ -154,6 +154,27 @@ function updateTable() {
 // --------------------------------
 // 输入信息处理
 // --------------------------------
+
+// 正整数格式
+var positiveInt = /^([1-9]\d*)$/;
+/**
+ * 检查当前输入是否合法
+ * @param {DOM} data 当前DOM元素
+ */
+function checkMemorySize(data) {
+    var value = $(data).val();
+    if (value == '' || positiveInt.test(value)) {
+        console.log('ok ' + value);
+        $(data).removeClass('is-invalid');
+    }
+    else {
+        console.log('wrong ' + value);
+        hasWrongProcessInfo = true;
+        if (!$(data).hasClass('is-invalid')) {
+            $(data).addClass('is-invalid');
+        }
+    }
+}
 /**
  * 绑定页面元素和进程信息列表
  * @param {DOM} data 当前DOM元素
@@ -161,7 +182,6 @@ function updateTable() {
 function bindingEvent(data) {
     console.log('do bindingEvent()');
     var value = $(data).val();
-    var attr = "";
     var eventID = $(data).parents("tr").attr("id");
     var id = parseInt(eventID.replace(/[^0-9]/ig, ""));
     var evn = events[id - 1];
@@ -188,9 +208,12 @@ function bindingEvent(data) {
 function changeEventType(evn) {
     console.log('do changeEventType()');
     var eventInfoTr = $('#eventInfos tbody #' + evn.eventID);
+    evn.memorySize = '';
+    evn.delID = 0;
     if (evn.eventType == 'allocate') {
         eventInfoTr.find('.memorySize').prop('disabled', false);
         eventInfoTr.find('.delID').prop('disabled', true);
+
     }
     else if (evn.eventType == 'recycle') {
         eventInfoTr.find('.memorySize').prop('disabled', true);
@@ -199,6 +222,9 @@ function changeEventType(evn) {
     else {
         console.log('changeEventType(): wrong eventType');
     }
+    eventInfoTr.find('.memorySize').removeClass('is-invalid');
+    eventInfoTr.find('.memorySize').val('');
+    eventInfoTr.find('.delID').val(0);
     changeDelID();
 }
 function changeDelID() {
