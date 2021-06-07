@@ -96,6 +96,19 @@ function newProcessInfo() {
     updateTable();
 }
 /**
+ * 添加一行随机数据
+ */
+function newProcessInfoRandom() {
+    console.log("do newProcessInfoRandom()");
+
+    processes.push(newProcess());
+    uncommitProcessInfos();
+    processes[processes.length - 1].arrivalTime = Math.ceil(Math.random() * 60);
+    processes[processes.length - 1].serviceTime = Math.ceil(Math.random() * 15);
+
+    updateTable();
+}
+/**
  * 删除表格当前行
  * @param {DOM} data 当前DOM元素
  */
