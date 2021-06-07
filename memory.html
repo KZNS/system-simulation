@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css" />
+    <title>存储管理</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>存储管理</h1>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <h2>存储分配</h2>
+        </div>
+        <div class="row">
+            <table class="table table-striped" id="processInfos">
+                <thead>
+                    <tr>
+                        <th scope="col">事件id</th>
+                        <th scope="col">事件类型</th>
+                        <th scope="col">申请空间大小</th>
+                        <th scope="col">删除事件id</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="processInfo">
+                        <th scope="row">1</th>
+                        <td>
+                            <div class="input-group">
+                                选择
+                            </div>
+                        </td>
+                        <td>
+                            <div lass="input-group">
+                                <input type="text" class="form-control serviceTime" placeholder="服务时间"
+                                    oninput="checkData(this)" onchange="bindingProcess(this)" value="">
+                            </div>
+                        </td>
+                        <td class="completionTime">
+                            选择
+                        </td>
+                        <td><button type="button" class="btn btn-danger" onclick="delProcessInfoThis(this)">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-4" style="text-align: right">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                        data-bs-target="#inputProcessInfos-Modal" onclick="initModal(this)">批量添加数据</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProcessInfos()">复制当前数据</button>
+                </div>
+            </div>
+            <div class="col-4" style="text-align: right">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-success" onclick="newProcessInfo()">新增一行</button>
+                    <button type="button" class="btn btn-danger" onclick="delProcessInfoLast()">删除最后一行</button>
+                </div>
+                <button type="button" class="btn btn-danger" onclick="delProcessInfoAll()">清空</button>
+            </div>
+        </div>
+        <div class="clearfix" style="margin-bottom: 10px;"></div>
+        <div class="row">
+        </div>
+        <div class="row">
+            <div class="col">
+                <hr />
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>
+                    模拟
+                </h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-danger" onclick="resetSimulation()">恢复</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-primary" onclick="nextStep()">单步执行</button>
+                    <button type="button" class="btn btn-primary" onclick="prevStep()">单步后退</button>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">事件</span>
+                    <input type="text" class="form-control" id="SimulationClock" aria-label="Username"
+                        aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary" onclick="runTo()">跳转</button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                内存映像图
+            </div>
+            <div class="col-4">
+                已分配表
+            </div>
+            <div class="col-4">
+                未分配表
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Modals -->
+    <div class="modal fade" id="inputProcessInfos-Modal" tabindex="-1" aria-labelledby="inputProcessInfos-Modal-Label"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputProcessInfos-Modal-Label">批量添加数据</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <textarea type="text" class="form-control" id="inputProcessInfos" rows="7"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <div class="alert alert-danger fade" role="alert">
+                        错误数据格式
+                    </div>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-success" onclick="inputProcessInfos(this)">添加</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="js/memory.js"></script>
+    <script>initPage()</script>
+</body>
+
+</html>
