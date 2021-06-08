@@ -88,7 +88,7 @@ function insertEvent(id) {
         events.splice(id - 1, 0, evn);
         eventInfoFit(eventInfoFormat, evn);
         $('#eventInfos #event' + (id + 1)).before(eventInfoFormat.prop('outerHTML'));
-        changeDelID();
+        fitData();
     }
 }
 function deleteEvent(id) {
@@ -116,7 +116,7 @@ function deleteEvent(id) {
                 eventInfoFit(eventInfoTr, evn);
             }
         }
-        changeDelID();
+        fitData();
     }
     if (events.length == 0) {
         newEventInfo();
@@ -191,21 +191,65 @@ function updateTable() {
     for (var i = 0; i < events.length; i++) {
         var evn = events[i];
         var eventInfoTr = eventInfosTbody.find('#' + evn.eventID);
-        eventInfoTr.find('.eventType').val(evn.eventType);
+        fitEventType(evn);
+    }
+    fitData();
+}
+function fitEventType(evn) {
+    console.log('do fitEventType()');
+
+    var eventInfoTr = eventInfosTbody.find('#' + evn.eventID);
+    eventInfoTr.find('.eventType').val(evn.eventType);
+    if (evn.eventType == 'allocate') {
+        eventInfoTr.find('.memorySize').prop('disabled', false);
+        eventInfoTr.find('.delID').prop('disabled', true);
+    }
+    else if (evn.eventType == 'recycle') {
+        eventInfoTr.find('.memorySize').prop('disabled', true);
+        eventInfoTr.find('.delID').prop('disabled', false);
+    }
+    else {
+        console.log('wrong eventType');
+    }
+}
+function fitData() {
+    console.log('do fitData()');
+    var idList = [];
+    for (var i = 0; i < events.length; i++) {
+        var evn = events[i];
         if (evn.eventType == 'allocate') {
-            eventInfoTr.find('.memorySize').prop('disabled', false);
-            eventInfoTr.find('.delID').prop('disabled', true);
+            idList.push(evn.id);
+            $('#' + evn.eventID + ' .memorySize').prop('value', evn.memorySize);
         }
         else if (evn.eventType == 'recycle') {
-            eventInfoTr.find('.memorySize').prop('disabled', true);
-            eventInfoTr.find('.delID').prop('disabled', false);
+            setDelIDOption(evn, idList);
         }
-        else {
-            console.log('wrong eventType');
-        }
-        eventInfoTr.find('.memorySize').attr('value', evn.memorySize);
     }
-    changeDelID();
+}
+function setDelIDOption(evn, idList) {
+    var delIDSelect = $('#' + evn.eventID + ' .delID');
+    delIDSelect.empty();
+    delIDSelect.append(
+        '<option value="' + 0 + '">' + eventInfoDefault + '</option>'
+    )
+    var flag = false;
+    for (var i = 0; i < idList.length; i++) {
+        delIDSelect.append(
+            '<option value="' + idList[i] + '">' + idList[i] + '</option>'
+        );
+        if (idList[i] === evn.delID) {
+            idList.splice(i, 1);
+            i--;
+            flag = true;
+        }
+    }
+    if (flag) {
+        delIDSelect.val(evn.delID);
+    }
+    else {
+        delIDSelect.val(0);
+        evn.delID = 0;
+    }
 }
 
 // --------------------------------
@@ -245,14 +289,17 @@ function bindingEvent(data) {
 
     if ($(data).hasClass('eventType')) {
         evn.eventType = value;
-        changeEventType(evn);
+        evn.memorySize = '';
+        evn.delID = 0;
+        fitEventType(evn);
+        fitData();
     }
     else if ($(data).hasClass('memorySize')) {
         evn.memorySize = parseInt(value);
     }
     else if ($(data).hasClass('delID')) {
         evn.delID = parseInt(value);
-        changeDelID();
+        fitData();
     }
     else {
         console.log('wrong in bindingEvent()');
@@ -262,66 +309,6 @@ function bindingEvent(data) {
     console.log(evn);
 }
 
-function changeEventType(evn) {
-    console.log('do changeEventType()');
-
-    evn.memorySize = '';
-    evn.delID = 0;
-    var eventInfoTr = eventInfosTbody.find('#' + evn.eventID);
-    if (evn.eventType == 'allocate') {
-        eventInfoTr.find('.memorySize').prop('disabled', false);
-        eventInfoTr.find('.delID').prop('disabled', true);
-    }
-    else if (evn.eventType == 'recycle') {
-        eventInfoTr.find('.memorySize').prop('disabled', true);
-        eventInfoTr.find('.delID').prop('disabled', false);
-    }
-    else {
-        console.log('wrong eventType');
-    }
-
-    eventInfoTr.find('.memorySize').removeClass('is-invalid');
-
-    changeDelID();
-}
-function changeDelID() {
-    console.log('do changeDelID()');
-    var idList = [];
-    for (var i = 0; i < events.length; i++) {
-        var evn = events[i];
-        if (evn.eventType == 'allocate') {
-            idList.push(evn.id);
-        }
-        else if (evn.eventType == 'recycle') {
-            setDelIDOption(evn, idList);
-        }
-    }
-}
-function setDelIDOption(evn, idList) {
-    var delIDSelect = $('#' + evn.eventID + ' .delID');
-    delIDSelect.empty();
-    delIDSelect.append(
-        '<option value="' + 0 + '">' + eventInfoDefault + '</option>'
-    )
-    var flag = false;
-    for (var i = 0; i < idList.length; i++) {
-        delIDSelect.append(
-            '<option value="' + idList[i] + '">' + idList[i] + '</option>'
-        );
-        if (idList[i] === evn.delID) {
-            idList.splice(i, 1);
-            i--;
-            flag = true;
-        }
-    }
-    if (flag) {
-        delIDSelect.val(evn.delID);
-    }
-    else {
-        delIDSelect.val(0);
-        evn.delID = 0;
-    }
-}
 // --------------------------------
 // 批量读入和保存进程信息
 // --------------------------------
