@@ -60,18 +60,80 @@ function newEvent() {
     }
     return e;
 }
+function insertEvent(id) {
+    if (id == null) {
+        var evn = newEvent();
+        events.push(evn);
+        evn.setID(events.length);
+        eventInfoFit(eventInfoFormat, evn);
+        $('#eventInfos tbody').append(eventInfoFormat.prop('outerHTML'));
+    }
+    else if (id <= events.length) {
+        var evn = newEvent();
+        evn.setID(id);
+        var eventInfosTbody = $('#eventInfos tbody');
+        for (var i = events.length - 1; i >= id - 1; i--) {
+            var eventInfoTr = eventInfosTbody.find('#' + events[i].eventID);
+            events[i].setID(i + 2);
+            if (events[i].eventType == 'recycle' && events[i].delID >= id) {
+                events[i].delID++;
+            }
+            eventInfoFit(eventInfoTr, events[i]);
+        }
+        events.splice(id - 1, 0, evn);
+        eventInfoFit(eventInfoFormat, evn);
+        $('#eventInfos #event' + (id + 1)).before(eventInfoFormat.prop('outerHTML'));
+        changeDelID();
+    }
+}
+function deleteEvent(id) {
+    if (id == null) {
+        events.pop();
+        $('#eventInfos tbody tr:last').remove();
+    }
+    else if (id <= events.length) {
+        $('#eventInfos #' + events[id - 1].eventID).remove();
+        events.splice(id - 1, 1);
+        var eventInfosTbody = $('#eventInfos tbody');
+        for (var i = 0; i < events.length; i++) {
+            var evn = events[i];
+            if (evn.id !== i + 1) {
+                var eventInfoTr = eventInfosTbody.find('#' + evn.eventID);
+                evn.setID(i + 1);
+                if (evn.eventType == 'recycle') {
+                    if (evn.delID == id) {
+                        evn.delID = 0;
+                    }
+                    else if (evn.delID > id) {
+                        evn.delID--;
+                    }
+                }
+                eventInfoFit(eventInfoTr, evn);
+            }
+        }
+        changeDelID();
+    }
+    if (events.length == 0) {
+        newEventInfo();
+    }
+}
 /**
  * 添加一行表格在最后
  */
 function newEventInfo() {
     console.log("do newEventInfo()");
+    insertEvent();
+}
+/**
+ * 添加一行表格在当前行前
+ */
+function newEventInfoBeforeThis(data) {
+    console.log("do newEventInfoBeforeThis()");
 
-    events.push(newEvent());
-    var evn = events[events.length - 1];
-    evn.setID(events.length);
-    eventInfoFormat.find('th').text(evn.id);
-    eventInfoFormat.attr('id', evn.eventID);
-    $('#eventInfos tbody').append(eventInfoFormat.prop('outerHTML'));
+    var eventID = $(data).parents("tr").attr("id");
+    var id = parseInt(eventID.replace(/[^0-9]/ig, ""));
+
+    insertEvent(id);
 }
 /**
  * 删除表格当前行
@@ -81,30 +143,9 @@ function delEventInfoThis(data) {
     console.log("do delEventInfoThis()");
 
     var eventID = $(data).parents("tr").attr("id");
-    console.log("del " + eventID);
-    $('#eventInfos #' + eventID).remove();
     var id = parseInt(eventID.replace(/[^0-9]/ig, ""));
-    events.splice(id - 1, 1);
 
-    updateTable();
-}
-function newEventInfoAfterThis(data) {
-    console.log("do newEventInfoAfterThis()");
-
-    var eventID = $(data).parents("tr").attr("id");
-    console.log("new after " + eventID);
-
-    var tmp = eventID;
-    var id = parseInt(tmp.replace(/[^0-9]/ig, ""));
-    events.splice(id, 0, newEvent());
-    var evn = events[id];
-    evn.setID(id + 1);
-    eventInfoFormat.find('th').text(evn.id);
-    eventInfoFormat.attr('id', evn.eventID);
-    console.log(eventID);
-    $('#eventInfos #' + eventID).after(eventInfoFormat.prop('outerHTML'));
-
-    updateTable();
+    deleteEvent(id);
 }
 /**
  * 删除表格最后一行
@@ -112,11 +153,7 @@ function newEventInfoAfterThis(data) {
 function delEventInfoLast() {
     console.log("do delEventInfoLast()");
 
-    events.pop();
-    $('#eventInfos tbody tr:last').remove();
-    if (events.length == 0) {
-        newEventInfo();
-    }
+    deleteEvent();
 }
 /**
  * 删除全部表格
@@ -132,6 +169,13 @@ function delEventInfoAll() {
 // --------------------------------
 // 事件信息表格显示
 // --------------------------------
+/**
+ * 将进程信息填入DOM
+ */
+function eventInfoFit(eventInfoTr, evn) {
+    eventInfoTr.find("th").text(evn.id);
+    eventInfoTr.attr("id", evn.eventID);
+}
 /**
  * 刷新表格
  */
