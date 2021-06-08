@@ -9,6 +9,9 @@
 
 // 页面格式模板
 var eventInfoFormat;
+var memoryInfoFormat;
+var usedInfoFormat;
+var unusedInfoFormat;
 
 // 事件信息默认值
 var eventInfoDefault;
@@ -29,6 +32,9 @@ function getPageElements() {
     eventInfosTbody = $('#eventInfos tbody');
 
     memoryTotalSize = parseInt($('#memoryTotalSize').prop('value'));
+    memoryInfoFormat = $('#memory tbody tr:first').clone();
+    usedInfoFormat = $('#used tbody tr:first').clone();
+    unusedInfoFormat = $('#unused tbody tr:first').clone();
 }
 /**
  * 初始化页面
@@ -380,3 +386,117 @@ function saveEventInfos() {
 // 逐步模拟
 // --------------------------------
 var memoryTotalSize;
+var eventClock = 0;
+var memoryRemainingMaxSize;
+var usedList = [];
+var unusedList = [];
+
+function checkData(evn) {
+    if (evn.eventType == 'allocate') {
+        var value = $('#' + evn.eventID + ' .memorySize').prop('value');
+        if (value == '' || !positiveInt.test(value) || evn.memorySize > memoryRemainingMaxSize) {
+            $('#' + evn.eventID + ' .memorySize').addClass('is-invalid');
+            return false;
+        }
+    }
+    return true;
+}
+function lockEvent(evn) {
+    var eventInfosTr = $('#' + evn.eventID);
+    eventInfosTr.find('.eventType').prop('disabled', true);
+    eventInfosTr.find('.memorySize').prop('disabled', true)
+    eventInfosTr.find('.delID').prop('disabled', true)
+}
+function ExecuteEvent(evn) {
+    var memorySize = evn.memorySize;
+    for (var i = 0; i < unusedList.length; i++) {
+        if (memorySize <= unusedList[i].size) {
+            useMemory(evn.id, evn.memorySize, i);
+            break;
+        }
+    }
+}
+function useMemory(id, size, index) {
+    var startAddress = unusedList[index].startAddress;
+    if (size < unusedList[index].size) {
+        unusedList[index].startAddress += size;
+        unusedList[index].size -= size;
+    }
+    else {
+        unusedList.splice(index, 1);
+    }
+    var i;
+    for (i = 0; i < usedList.length; i++) {
+        if (usedList[i].startAddress > startAddress) {
+            break;
+        }
+    }
+    usedList.splice(i, 0,
+        { startAddress: startAddress, size: size, id: id }
+    );
+}
+function nextStep() {
+    console.log('do nextStep()');
+    if (eventClock == 0) {
+        var value = $('#memoryTotalSize').prop('value');
+        if (value == '' || !positiveInt.test(value)) {
+            $('#memoryTotalSize').addClass('is-invalid');
+            return;
+        }
+        memoryTotalSize = parseInt(value);
+        memoryRemainingMaxSize = memoryTotalSize;
+        usedList = [];
+        unusedList = [{ startAddress: 0, size: memoryTotalSize, id: '' }];
+    }
+    if (eventClock >= events.length) {
+        return;
+    }
+    var evn = events[eventClock];
+    if (!checkData(evn)) {
+        return;
+    }
+
+    if (eventClock == 0) {
+        $('#memoryTotalSize').prop('disabled', 'true');
+    }
+    lockEvent(evn);
+    ExecuteEvent(evn);
+
+    updateSimulation();
+    eventClock++;
+}
+function updateSimulation() {
+    console.log('do updateSimulation()');
+    console.log(usedList);
+    console.log(unusedList);
+    var memoryTbody = $('#memory tbody');
+    var usedTbody = $('#used tbody');
+    var unusedTbody = $('#unused tbody');
+    memoryTbody.empty();
+    usedTbody.empty();
+    unusedTbody.empty();
+    var i = 0, j = 0;
+    var item;
+    while (i < usedList.length || j < unusedList.length) {
+        if (j >= unusedList.length
+            || (i < usedList.length && usedList[i].startAddress < unusedList[i].startAddress)) {
+            item = usedList[i];
+            i++
+            usedInfoFormat.find('.startAddress').text(item.startAddress);
+            usedInfoFormat.find('.size').text(item.size);
+            usedInfoFormat.find('.id').text(item.id);
+            usedTbody.append(usedInfoFormat.prop('outerHTML'));
+        }
+        else {
+            item = unusedList[j];
+            j++
+            unusedInfoFormat.find('.startAddress').text(item.startAddress);
+            unusedInfoFormat.find('.size').text(item.size);
+            unusedTbody.append(unusedInfoFormat.prop('outerHTML'));
+        }
+        memoryInfoFormat.find('.startAddress').text(item.startAddress);
+        memoryInfoFormat.find('.id').text(item.id);
+        memoryInfoFormat.find('.size').text(item.size);
+        memoryTbody.append(memoryInfoFormat.prop('outerHTML'));
+    }
+}
