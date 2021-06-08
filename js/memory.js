@@ -27,6 +27,8 @@ function getPageElements() {
     eventInfoDefault = $('.eventInfo:first .delID option').text();
 
     eventInfosTbody = $('#eventInfos tbody');
+
+    memoryTotalSize = parseInt($('#memoryTotalSize').prop('value'));
 }
 /**
  * 初始化页面
@@ -373,3 +375,8 @@ function saveEventInfos() {
 
     navigator.clipboard.writeText(infos)
 }
+
+// --------------------------------
+// 逐步模拟
+// --------------------------------
+var memoryTotalSize;
