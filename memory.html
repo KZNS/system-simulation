@@ -124,27 +124,77 @@
             <div class="col">
                 <button type="button" class="btn btn-primary" onclick="runTo()">跳转</button>
             </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">内存总空间</span>
+                    <input type="text" class="form-control" id="SimulationClock" value="200">
+                </div>
+            </div>
         </div>
+        <div class="clearfix" style="margin-bottom: 10px;"></div>
         <div class="row" style="text-align: center;">
             <div class="col-4">
-                内存映像图
+                <h4>内存映像图</h4>
             </div>
             <div class="col-4">
-                已分配表
+                <h4>已分配表</h4>
             </div>
             <div class="col-4">
-                未分配表
+                <h4>未分配表</h4>
             </div>
         </div>
         <div class="row">
             <div class="col-4">
-                <div id="graph1" style="text-align: center;"></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">起始地址</th>
+                            <th scope="col">任务编号</th>
+                            <th scope="col">内存大小</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td></td>
+                            <td>100</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-4">
-                <div id="graph2" style="text-align: center;"></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">起始地址</th>
+                            <th scope="col">内存大小</th>
+                            <th scope="col">任务编号</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-4">
-                <div id="graph3" style="text-align: center;"></div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">起始地址</th>
+                            <th scope="col">内存大小</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>0</td>
+                            <td>100</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -182,18 +232,6 @@
     <script src="js/common.js"></script>
     <script src="js/memory.js"></script>
     <script>initPage()</script>
-
-    <script>
-        d3.select("#graph1")
-            .graphviz()
-            .renderDot('digraph {a -> b}');
-        d3.select("#graph2")
-            .graphviz()
-            .renderDot('digraph {a -> b}');
-        d3.select("#graph3")
-            .graphviz()
-            .renderDot('digraph {a -> b}');
-    </script>
 </body>
 
 </html>
