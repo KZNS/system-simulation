@@ -72,8 +72,8 @@
                 <div class="btn-group" role="group" aria-label="Basic example">
                     <!-- Button trigger modal -->
                     <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                        data-bs-target="#inputProcessInfos-Modal" onclick="initModal(this)">批量添加数据</button>
-                    <button type="button" class="btn btn-primary" onclick="saveProcessInfos()">复制当前数据</button>
+                        data-bs-target="#inputEventInfos-Modal" onclick="initModal(this)">批量添加数据</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEventInfos()">复制当前数据</button>
                 </div>
             </div>
             <div class="col-4" style="text-align: right">
@@ -151,23 +151,23 @@
 
 
     <!-- Modals -->
-    <div class="modal fade" id="inputProcessInfos-Modal" tabindex="-1" aria-labelledby="inputProcessInfos-Modal-Label"
+    <div class="modal fade" id="inputEventInfos-Modal" tabindex="-1" aria-labelledby="inputEventInfos-Modal-Label"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="inputProcessInfos-Modal-Label">批量添加数据</h5>
+                    <h5 class="modal-title" id="inputEventInfos-Modal-Label">批量添加数据</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <textarea type="text" class="form-control" id="inputProcessInfos" rows="7"></textarea>
+                    <textarea type="text" class="form-control" id="inputEventInfos" rows="7"></textarea>
                 </div>
                 <div class="modal-footer">
                     <div class="alert alert-danger fade" role="alert">
                         错误数据格式
                     </div>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-success" onclick="inputProcessInfos(this)">添加</button>
+                    <button type="button" class="btn btn-success" onclick="inputEventInfos(this)">添加</button>
                 </div>
             </div>
         </div>
@@ -179,6 +179,7 @@
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://unpkg.com/@hpcc-js/wasm@0.3.11/dist/index.min.js"></script>
     <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
+    <script src="js/common.js"></script>
     <script src="js/memory.js"></script>
     <script>initPage()</script>
 

@@ -13,6 +13,9 @@ var eventInfoFormat;
 // 事件信息默认值
 var eventInfoDefault;
 
+// 事件列表DOM
+var eventInfosTbody;
+
 /**
  * 获取html页面中的dom元素，
  * 根据dom设置页面格式模板，进程信息默认值
@@ -22,6 +25,8 @@ function getPageElements() {
 
     eventInfoFormat = $('.eventInfo:first').clone();
     eventInfoDefault = $('.eventInfo:first .delID option').text();
+
+    eventInfosTbody = $('#eventInfos tbody');
 }
 /**
  * 初始化页面
@@ -173,8 +178,9 @@ function delEventInfoAll() {
  * 将进程信息填入DOM
  */
 function eventInfoFit(eventInfoTr, evn) {
-    eventInfoTr.find("th").text(evn.id);
-    eventInfoTr.attr("id", evn.eventID);
+    console.log('do eventInfoFit()');
+    eventInfoTr.find('th').text(evn.id);
+    eventInfoTr.attr('id', evn.eventID);
 }
 /**
  * 刷新表格
@@ -182,17 +188,24 @@ function eventInfoFit(eventInfoTr, evn) {
 function updateTable() {
     console.log('do updateTable()');
 
-    var eventInfosTbody = $("#eventInfos").find("tbody");
-
     for (var i = 0; i < events.length; i++) {
         var evn = events[i];
         var eventInfoTr = eventInfosTbody.find('#' + evn.eventID);
-        if (evn.id !== i + 1) {
-            evn.setID(i + 1);
-            eventInfoTr.attr('id', evn.eventID);
-            eventInfoTr.find('th').text(evn.id);
+        eventInfoTr.find('.eventType').val(evn.eventType);
+        if (evn.eventType == 'allocate') {
+            eventInfoTr.find('.memorySize').prop('disabled', false);
+            eventInfoTr.find('.delID').prop('disabled', true);
         }
+        else if (evn.eventType == 'recycle') {
+            eventInfoTr.find('.memorySize').prop('disabled', true);
+            eventInfoTr.find('.delID').prop('disabled', false);
+        }
+        else {
+            console.log('wrong eventType');
+        }
+        eventInfoTr.find('.memorySize').attr('value', evn.memorySize);
     }
+    changeDelID();
 }
 
 // --------------------------------
@@ -251,24 +264,24 @@ function bindingEvent(data) {
 
 function changeEventType(evn) {
     console.log('do changeEventType()');
-    var eventInfoTr = $('#eventInfos tbody #' + evn.eventID);
+
     evn.memorySize = '';
     evn.delID = 0;
+    var eventInfoTr = eventInfosTbody.find('#' + evn.eventID);
     if (evn.eventType == 'allocate') {
         eventInfoTr.find('.memorySize').prop('disabled', false);
         eventInfoTr.find('.delID').prop('disabled', true);
-
     }
     else if (evn.eventType == 'recycle') {
         eventInfoTr.find('.memorySize').prop('disabled', true);
         eventInfoTr.find('.delID').prop('disabled', false);
     }
     else {
-        console.log('changeEventType(): wrong eventType');
+        console.log('wrong eventType');
     }
+
     eventInfoTr.find('.memorySize').removeClass('is-invalid');
-    eventInfoTr.find('.memorySize').val('');
-    eventInfoTr.find('.delID').val(0);
+
     changeDelID();
 }
 function changeDelID() {
@@ -308,4 +321,68 @@ function setDelIDOption(evn, idList) {
         delIDSelect.val(0);
         evn.delID = 0;
     }
+}
+// --------------------------------
+// 批量读入和保存进程信息
+// --------------------------------
+/**
+ * 处理批量输入的进程信息数据
+ * @param {DOM} data 当前DOM元素
+ */
+function inputEventInfos(data) {
+    console.log("do inputEventInfos()");
+    var infos = $("#inputEventInfos").val();
+    var tmpEvents = [];
+    console.log(infos);
+    datas = CSVToArray(infos);
+    for (var i = 0; i < datas.length; i++) {
+        if (datas[i].length != 3) {
+            console.log('wrong ' + datas[i].length);
+            $(data).siblings(".alert").addClass("show");
+            return;
+        }
+        var evn = newEvent();
+        evn.setID(i + 1);
+        evn.eventType = datas[i][0];
+        if (evn.eventType == 'allocate') {
+            evn.memorySize = parseInt(datas[i][1]);
+            evn.delID = 0;
+        }
+        else if (evn.eventType == 'recycle') {
+            evn.memorySize = '';
+            evn.delID = parseInt(datas[i][2]);
+        }
+        else {
+            console.log(datas[i][0]);
+            $(data).siblings(".alert").addClass("show");
+            return;
+        }
+        tmpEvents.push(evn);
+    }
+    events = tmpEvents;
+    eventInfosTbody.empty();
+    for (var i = 0; i < events.length; i++) {
+        eventInfoFit(eventInfoFormat, events[i]);
+        eventInfosTbody.append(eventInfoFormat.prop('outerHTML'));
+    }
+    if (events.length == 0) {
+        newEventInfo();
+    }
+    updateTable();
+
+    // 关闭模态框
+    $("#inputEventInfos-Modal").modal("hide");
+}
+/**
+ * 保存当前事件信息到剪贴板
+ */
+function saveEventInfos() {
+    console.log("do saveEventInfos()");
+    var infos = events[0].eventType + ',' + events[0].memorySize + ',' + events[0].delID;
+    for (var i = 1; i < events.length; i++) {
+        infos = infos + '\n' + events[i].eventType + ',' + events[i].memorySize + ',' + events[i].delID;
+    }
+    console.log(infos);
+
+    navigator.clipboard.writeText(infos)
 }
