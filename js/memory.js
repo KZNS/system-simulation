@@ -529,6 +529,13 @@ function updateSimulation() {
         memoryInfoFormat.find('.startAddress').text(item.startAddress);
         memoryInfoFormat.find('.id').text(item.id);
         memoryInfoFormat.find('.size').text(item.size);
+        memoryInfoFormat.css('height', (item.size * 100 / memoryTotalSize) + '%');
+        if (item.id == '') {
+            memoryInfoFormat.css('background-color', 'rgba(0, 0, 0, 0.05)');
+        }
+        else {
+            memoryInfoFormat.css('background-color', 'rgba(0, 0, 0, 0)');
+        }
         memoryTbody.append(memoryInfoFormat.prop('outerHTML'));
     }
 }
