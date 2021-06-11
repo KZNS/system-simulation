@@ -408,11 +408,22 @@ function lockEvent(evn) {
     eventInfosTr.find('.delID').prop('disabled', true)
 }
 function ExecuteEvent(evn) {
-    var memorySize = evn.memorySize;
-    for (var i = 0; i < unusedList.length; i++) {
-        if (memorySize <= unusedList[i].size) {
-            useMemory(evn.id, evn.memorySize, i);
-            break;
+    if (evn.eventType == 'allocate') {
+        var memorySize = evn.memorySize;
+        for (var i = 0; i < unusedList.length; i++) {
+            if (memorySize <= unusedList[i].size) {
+                useMemory(evn.id, evn.memorySize, i);
+                break;
+            }
+        }
+    }
+    else {
+        var delID = evn.delID;
+        for (var i = 0; i < usedList.length; i++) {
+            if (usedList[i].id == delID) {
+                unuseMemory(i);
+                break;
+            }
         }
     }
 }
@@ -434,6 +445,27 @@ function useMemory(id, size, index) {
     usedList.splice(i, 0,
         { startAddress: startAddress, size: size, id: id }
     );
+}
+function unuseMemory(index) {
+    var startAddress = usedList[index].startAddress;
+    var size = usedList[index].size;
+    usedList.splice(index, 1);
+    var i;
+    for (i = 0; i < unusedList.length; i++) {
+        if (unusedList[i].startAddress > startAddress) {
+            break;
+        }
+    }
+    unusedList.splice(i, 0,
+        { startAddress: startAddress, size: size, id: '' }
+    );
+    for (i = 1; i < unusedList.length; i++) {
+        if (unusedList[i - 1].startAddress + unusedList[i - 1].size == unusedList[i].startAddress) {
+            unusedList[i - 1].size += unusedList[i].size;
+            unusedList.splice(i, 1);
+            i--;
+        }
+    }
 }
 function nextStep() {
     console.log('do nextStep()');
