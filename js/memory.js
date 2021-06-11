@@ -511,7 +511,7 @@ function updateSimulation() {
     var item;
     while (i < usedList.length || j < unusedList.length) {
         if (j >= unusedList.length
-            || (i < usedList.length && usedList[i].startAddress < unusedList[i].startAddress)) {
+            || (i < usedList.length && usedList[i].startAddress < unusedList[j].startAddress)) {
             item = usedList[i];
             i++
             usedInfoFormat.find('.startAddress').text(item.startAddress);
