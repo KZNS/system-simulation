@@ -7,6 +7,8 @@ var SSTFdata = [];
 var SCANdata = [];
 var data = [];
 
+var nonNegativeInt = /^0|([1-9]\d*)$/;
+
 function randomData() {
     console.log('do randomData()');
 
@@ -24,6 +26,41 @@ function randomData() {
 function clearData() {
     console.log('do clearData()');
     $('#data').prop('value', '');
+}
+
+function commitData() {
+    console.log('do commitData()');
+
+    var text = $('#data').prop('value');
+    data = CSVToArray(text);
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].length != 2) {
+            wrongData();
+            return;
+        }
+        for (var j = 0; j < 2; j++) {
+            if (!nonNegativeInt.test(data[i][j])) {
+                wrongData();
+                return;
+            }
+        }
+    }
+    rightData();
+    calculate();
+    render();
+}
+function wrongData() {
+    $('#data').addClass('is-invalid');
+}
+function rightData() {
+    $('#data').removeClass('is-invalid');
+}
+
+function calculate() {
+    console.log('do calculate()');
+    data.sort(function (a, b) {
+        return a[0], b[0];
+    });
 }
 
 
