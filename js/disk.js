@@ -91,6 +91,7 @@ function calculateSSTF() {
                     index = j;
                 }
             }
+            pos = workingList[index];
             SSTFdata.push([timeClock, workingList[index]]);
             workingList.splice(index, 1);
             timeClock++;
@@ -107,6 +108,53 @@ function calculateSSTF() {
 }
 function calculateSCAN() {
     console.log('do calculateSCAN()');
+
+    timeClock = 0;
+    SCANdata = [[0, 0]];
+    var workingList = [[], []];
+    var pos = 0;
+    var direction = 0;
+    var tmp, od = 1;
+    var i = 0;
+    while (true) {
+        while (i < data.length && timeClock >= data[i][0]) {
+            if (data[i][1] < pos) {
+                workingList[1].push(data[i][1]);
+            }
+            else if (data[i][1] > pos) {
+                workingList[0].push(data[i][1]);
+            }
+            else {
+                workingList[direction].push(data[i][1]);
+            }
+            i++
+        }
+        if (workingList[direction].length == 0) {
+            if (workingList[od].length == 0) {
+                if (i < data.length) {
+                    timeClock = data[i][0];
+                }
+                else {
+                    break;
+                }
+            }
+            else {
+                tmp = direction;
+                direction = od;
+                od = tmp;
+                workingList[direction].sort(function (a, b) { if (direction == 0) return a > b; else return a < b });
+                pos = workingList[direction][0];
+                SCANdata.push([timeClock, workingList[direction].shift()]);
+                timeClock++;
+            }
+        }
+        else {
+            workingList[direction].sort(function (a, b) { if (direction == 0) return a > b; else return a < b });
+            pos = workingList[direction][0];
+            SCANdata.push([timeClock, workingList[direction].shift()]);
+            timeClock++;
+        }
+    }
 }
 
 
@@ -124,6 +172,9 @@ var svg = d3.select('#svg')
 
 function render() {
     svg.selectAll('g').remove();
+
+    console.log(SSTFdata);
+    console.log(SCANdata);
 
     var min = 0;
     var max = d3.max(data, function (d) { return d[1] });
