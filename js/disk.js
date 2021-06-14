@@ -6,6 +6,7 @@
 var SSTFdata = [];
 var SCANdata = [];
 var data = [];
+var timeClock;
 
 var nonNegativeInt = /^0|([1-9]\d*)$/;
 
@@ -58,9 +59,51 @@ function rightData() {
 
 function calculate() {
     console.log('do calculate()');
+
     data.sort(function (a, b) {
-        return a[0], b[0];
+        return a[0] > b[0];
     });
+    console.log(data);
+
+    calculateSSTF();
+    calculateSCAN();
+}
+function calculateSSTF() {
+    console.log('do calculateSSTF()');
+
+    timeClock = 0;
+    SSTFdata = [];
+    var workingList = [];
+    var pos = 0;
+    var i = 0;
+    while (true) {
+        while (i < data.length && timeClock >= data[i][0]) {
+            workingList.push(data[i][1]);
+            i++
+        }
+        if (workingList.length != 0) {
+            var index = 0;
+            for (var j = 1; j < workingList.length; j++) {
+                if (Math.abs(workingList[j] - pos) < Math.abs(workingList[index] - pos)) {
+                    index = j;
+                }
+            }
+            SSTFdata.push([timeClock, workingList[index]]);
+            workingList.splice(index, 1);
+            timeClock++;
+        }
+        else {
+            if (i < data.length) {
+                timeClock = data[i][0];
+            }
+            else {
+                break;
+            }
+        }
+    }
+}
+function calculateSCAN() {
+    console.log('do calculateSCAN()');
 }
 
 
