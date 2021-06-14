@@ -21,6 +21,11 @@ function randomData() {
     $('#data').prop('value', text);
 }
 
+function clearData() {
+    console.log('do clearData()');
+    $('#data').prop('value', '');
+}
+
 
 // 图表的宽度和高度
 var width = 1000;
