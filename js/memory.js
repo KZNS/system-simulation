@@ -427,8 +427,8 @@ function ExecuteEvent(evn) {
         var memorySize = evn.memorySize;
         for (var i = 0; i < unusedList.length; i++) {
             if (memorySize <= unusedList[i].size) {
-                useMemory(evn.id, evn.memorySize, i);
                 operationLogs.push({ type: 'allocate', id: evn.id });
+                useMemory(evn.id, evn.memorySize, i);
                 break;
             }
         }
@@ -437,8 +437,8 @@ function ExecuteEvent(evn) {
         var delID = evn.delID;
         for (var i = 0; i < usedList.length; i++) {
             if (usedList[i].id == delID) {
-                unuseMemory(i);
                 operationLogs.push({ type: 'recycle', id: delID, size: usedList[i].size, startAddress: usedList[i].startAddress });
+                unuseMemory(i);
                 break;
             }
         }
@@ -546,12 +546,12 @@ function prevClock() {
     }
     else {
         for (var i = 0; i < usedList.length; i++) {
-            if (op.startAddress >= usedList[i].startAddress) {
+            if (op.startAddress < usedList[i].startAddress) {
                 usedList.splice(i, 0,
                     { startAddress: op.startAddress, size: op.size, id: op.id }
                 );
+                break;
             }
-            break;
         }
         for (var i = 0; i < unusedList.length; i++) {
             var mem = unusedList[i];
