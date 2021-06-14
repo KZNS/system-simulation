@@ -404,8 +404,20 @@ function checkData(evn) {
 function lockEvent(evn) {
     var eventInfosTr = $('#' + evn.eventID);
     eventInfosTr.find('.eventType').prop('disabled', true);
-    eventInfosTr.find('.memorySize').prop('disabled', true)
-    eventInfosTr.find('.delID').prop('disabled', true)
+    eventInfosTr.find('.memorySize').prop('disabled', true);
+    eventInfosTr.find('.delID').prop('disabled', true);
+}
+function unlockEvent(evn) {
+    var eventInfosTr = $('#' + evn.eventID);
+    eventInfosTr.find('.eventType').prop('disabled', false);
+    if (evn.eventType == 'allocate') {
+        eventInfosTr.find('.memorySize').prop('disabled', false);
+        eventInfosTr.find('.delID').prop('disabled', true);
+    }
+    else {
+        eventInfosTr.find('.memorySize').prop('disabled', true);
+        eventInfosTr.find('.delID').prop('disabled', false);
+    }
 }
 function ExecuteEvent(evn) {
     if (evn.eventType == 'allocate') {
@@ -538,4 +550,18 @@ function updateSimulation() {
         }
         memoryTbody.append(memoryInfoFormat.prop('outerHTML'));
     }
+}
+function resetSimulation() {
+    console.log('do resetSimulation()');
+
+    $('#memoryTotalSize').prop('disabled', false);
+    for (var i = 0; i < events.length; i++) {
+        unlockEvent(events[i]);
+    }
+
+    eventClock = 0;
+    memoryRemainingMaxSize = memoryTotalSize;
+    usedList = [];
+    unusedList = [{ startAddress: 0, size: memoryTotalSize, id: '' }];
+    updateSimulation();
 }
