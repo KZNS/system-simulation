@@ -484,11 +484,24 @@ function unuseMemory(index) {
 }
 function nextStep() {
     console.log('do nextStep()');
+
+    nextClock();
+    updateSimulation();
+}
+function prevStep() {
+    console.log('do nextStep()');
+
+    prevClock();
+    updateSimulation();
+}
+function nextClock() {
+    console.log('do nextClock()');
+
     if (eventClock == 0) {
         var value = $('#memoryTotalSize').prop('value');
         if (value == '' || !positiveInt.test(value)) {
             $('#memoryTotalSize').addClass('is-invalid');
-            return;
+            return false;
         }
         memoryTotalSize = parseInt(value);
         memoryRemainingMaxSize = memoryTotalSize;
@@ -497,11 +510,11 @@ function nextStep() {
         operationLogs = [];
     }
     if (eventClock >= events.length) {
-        return;
+        return false;
     }
     var evn = events[eventClock];
     if (!checkData(evn)) {
-        return;
+        return false;
     }
 
     if (eventClock == 0) {
@@ -511,10 +524,14 @@ function nextStep() {
     ExecuteEvent(evn);
     eventClock++;
 
-    updateSimulation();
+    return true;
 }
-function prevStep() {
-    console.log('do nextStep()');
+function prevClock() {
+    console.log('do prevClock()');
+
+    if (eventClock == 0) {
+        return false;
+    }
 
     eventClock--;
     var op = operationLogs.pop();
@@ -560,6 +577,25 @@ function prevStep() {
     }
     unlockEvent(events[eventClock]);
 
+    return true;
+}
+function runTo() {
+    console.log("do runTo()");
+    var clock = $('#eventClock').prop('value');
+    if (!(positiveInt.test(clock) || clock == '0')) {
+        return;
+    }
+    clock = parseInt(clock);
+    while (eventClock < clock) {
+        if (!nextClock()) {
+            break;
+        }
+    }
+    while (eventClock > clock) {
+        if (!prevClock()) {
+            break;
+        }
+    }
     updateSimulation();
 }
 function updateSimulation() {
@@ -603,6 +639,8 @@ function updateSimulation() {
         }
         memoryTbody.append(memoryInfoFormat.prop('outerHTML'));
     }
+
+    $('#eventClock').prop('value', eventClock);
 }
 function resetSimulation() {
     console.log('do resetSimulation()');
