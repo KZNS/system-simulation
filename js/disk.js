@@ -13,9 +13,9 @@ function randomData() {
     var dataLen = 30 + Math.ceil(Math.random() * 70);
 
     var text = '';
-    text = Math.ceil(Math.random() * 200);
+    text = Math.ceil(Math.random() * 100) + ',' + Math.ceil(Math.random() * 200);
     for (var i = 1; i < dataLen; i++) {
-        text += ',' + Math.ceil(Math.random() * 200);
+        text += '\n' + Math.ceil(Math.random() * 100) + ',' + Math.ceil(Math.random() * 200);
     }
 
     $('#data').prop('value', text);
