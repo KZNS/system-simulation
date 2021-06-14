@@ -177,6 +177,8 @@ function delEventInfoAll() {
     events = [];
     $('#eventInfos tbody').empty();
     newEventInfo();
+
+    resetSimulation();
 }
 
 // --------------------------------
