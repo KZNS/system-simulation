@@ -44,6 +44,9 @@ function commitData() {
                 wrongData();
                 return;
             }
+            else {
+                data[i][j] = parseInt(data[i][j]);
+            }
         }
     }
     rightData();
@@ -72,7 +75,7 @@ function calculateSSTF() {
     console.log('do calculateSSTF()');
 
     timeClock = 0;
-    SSTFdata = [];
+    SSTFdata = [[0, 0]];
     var workingList = [];
     var pos = 0;
     var i = 0;
@@ -122,9 +125,11 @@ var svg = d3.select('#svg')
 function render() {
     svg.selectAll('g').remove();
 
-    var min = d3.min(data);
-    var max = d3.max(data);
-    var timeMax = data.length;
+    var min = 0;
+    var max = d3.max(data, function (d) { return d[1] });
+    var timeMax = timeClock;
+    console.log(max);
+    console.log(timeMax);
 
     // scaleLinear 设置一个线性比例尺
     // domain 数据范围
@@ -140,8 +145,8 @@ function render() {
     // line.x([x]) 设置或获取x-坐标访问器
     // line.y([y]) 设置或获取y-坐标访问器
     var linePath = d3.line()
-        .x(function (d) { return xScale(d[0]) })
-        .y(function (d) { return yScale(d[1]) });
+        .x(function (d) { return xScale(d[1]) })
+        .y(function (d) { return yScale(d[0]) });
 
     // d3.axisBottom(scale) 创建一个新的轴生成器
     // d3.axisBottom(scale).scale([scale]) 设置或者取得比例尺
@@ -177,7 +182,7 @@ function render() {
         .append('circle')
         .attr('r', 5)
         .attr('transform', function (d) {
-            return 'translate(' + (xScale(d[0]) + padding.left) + ',' + (yScale(d[1]) + padding.top) + ')'
+            return 'translate(' + (xScale(d[1]) + padding.left) + ',' + (yScale(d[0]) + padding.top) + ')'
         })
         .attr('fill', 'green');
 
@@ -197,7 +202,7 @@ function render() {
         .append('circle')
         .attr('r', 5)
         .attr('transform', function (d) {
-            return 'translate(' + (xScale(d[0]) + padding.left) + ',' + (yScale(d[1]) + padding.top) + ')'
+            return 'translate(' + (xScale(d[1]) + padding.left) + ',' + (yScale(d[0]) + padding.top) + ')'
         })
         .attr('fill', 'blue');
 }
