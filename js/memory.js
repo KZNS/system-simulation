@@ -390,6 +390,7 @@ var eventClock = 0;
 var memoryRemainingMaxSize;
 var usedList = [];
 var unusedList = [];
+var operationLogs = [];
 
 function checkData(evn) {
     if (evn.eventType == 'allocate') {
@@ -425,6 +426,7 @@ function ExecuteEvent(evn) {
         for (var i = 0; i < unusedList.length; i++) {
             if (memorySize <= unusedList[i].size) {
                 useMemory(evn.id, evn.memorySize, i);
+                operationLogs.push({ type: 'allocate', id: evn.id });
                 break;
             }
         }
@@ -434,6 +436,7 @@ function ExecuteEvent(evn) {
         for (var i = 0; i < usedList.length; i++) {
             if (usedList[i].id == delID) {
                 unuseMemory(i);
+                operationLogs.push({ type: 'recycle', id: delID, size: usedList[i].size, startAddress: usedList[i].startAddress });
                 break;
             }
         }
@@ -491,6 +494,7 @@ function nextStep() {
         memoryRemainingMaxSize = memoryTotalSize;
         usedList = [];
         unusedList = [{ startAddress: 0, size: memoryTotalSize, id: '' }];
+        operationLogs = [];
     }
     if (eventClock >= events.length) {
         return;
@@ -505,9 +509,58 @@ function nextStep() {
     }
     lockEvent(evn);
     ExecuteEvent(evn);
+    eventClock++;
 
     updateSimulation();
-    eventClock++;
+}
+function prevStep() {
+    console.log('do nextStep()');
+
+    eventClock--;
+    var op = operationLogs.pop();
+    if (op.type == 'allocate') {
+        for (var i = 0; i < usedList.length; i++) {
+            if (usedList[i].id == op.id) {
+                unuseMemory(i);
+            }
+        }
+    }
+    else {
+        for (var i = 0; i < usedList.length; i++) {
+            if (op.startAddress >= usedList[i].startAddress) {
+                usedList.splice(i, 0,
+                    { startAddress: op.startAddress, size: op.size, id: op.id }
+                );
+            }
+            break;
+        }
+        for (var i = 0; i < unusedList.length; i++) {
+            var mem = unusedList[i];
+            if (op.startAddress < mem.startAddress + mem.size) {
+                if (mem.size == op.size) {
+                    unusedList.splice(i, 1);
+                }
+                else {
+                    if (mem.startAddress == op.startAddress) {
+                        mem.startAddress = op.startAddress + op.size;
+                        mem.size -= op.size;
+                    }
+                    else if (mem.startAddress + mem.size == op.startAddress + op.size) {
+                        mem.size -= op.size;
+                    }
+                    else {
+                        unusedList.splice(i, 0, { startAddress: mem.startAddress, size: op.startAddress - mem.startAddress, id: '' });
+                        mem.size = mem.startAddress + mem.size - (op.startAddress + op.size);
+                        mem.startAddress = op.startAddress + op.size;
+                    }
+                }
+                break;
+            }
+        }
+    }
+    unlockEvent(events[eventClock]);
+
+    updateSimulation();
 }
 function updateSimulation() {
     console.log('do updateSimulation()');
@@ -563,5 +616,6 @@ function resetSimulation() {
     memoryRemainingMaxSize = memoryTotalSize;
     usedList = [];
     unusedList = [{ startAddress: 0, size: memoryTotalSize, id: '' }];
+    operationLogs = [];
     updateSimulation();
 }
