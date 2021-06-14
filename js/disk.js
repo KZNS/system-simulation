@@ -3,15 +3,30 @@
  * @author KZNS
  */
 
+var SSTFdata = [];
+var SCANdata = [];
+var data = [];
+
+function randomData() {
+    console.log('do randomData()');
+
+    var dataLen = 30 + Math.ceil(Math.random() * 70);
+
+    var text = '';
+    text = Math.ceil(Math.random() * 200);
+    for (var i = 1; i < dataLen; i++) {
+        text += ',' + Math.ceil(Math.random() * 200);
+    }
+
+    $('#data').prop('value', text);
+}
+
+
 // 图表的宽度和高度
 var width = 1000;
 var height = 600;
 // 预留给轴线的距离
 var padding = { top: 50, right: 50, bottom: 50, left: 50 };
-
-var SSTFdata = [];
-var SCANdata = [];
-var data = [];
 
 // 选取id=svg的元素，在其中添加一个svg
 var svg = d3.select('#svg')
