@@ -141,7 +141,6 @@ function render() {
 			ctx.closePath();
 
 			ctx.fillStyle = bitmap[i * 25 + j];
-			console.log(bitmap[i * 25 + j]);
 			ctx.fill();
 		}
 	}
