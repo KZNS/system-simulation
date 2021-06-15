@@ -29,6 +29,21 @@ function addABCFile() {
 		size = sizes[i];
 		addFile(name, size);
 	}
+	var ABCList = [];
+	for (var i = fileList.length - 5; i < fileList.length; i++) {
+		ABCList.push(fileList[i]);
+	}
+	for (var i = 0; i < ABCList.length; i++) {
+		var text = '';
+		var poss = ABCList[i].poss;
+		text = poss[0];
+		for (var j = 1; j < poss.length; j++) {
+			text = text + ',' + poss[j];
+		}
+		console.log(text);
+		$('#' + names[i] + 'txt .poss').text(text);
+	}
+
 	render();
 }
 
