@@ -1,4 +1,37 @@
 
+
+function randomFile() {
+	initBitMap();
+	var name;
+	var size;
+	for (var i = 1; i <= 50; i++) {
+		name = i + '.txt';
+		size = Math.round(2 + Math.random() * 8);
+		addFile(name, size);
+	}
+	render();
+}
+function deleteOddFile() {
+	var name;
+	for (var i = 1; i <= 50; i += 2) {
+		name = i + '.txt';
+		removeFile(name);
+	}
+	render();
+}
+function addABCFile() {
+	var names = ['A', 'B', 'C', 'D', 'E'];
+	var sizes = [7, 5, 2, 8, 3.5];
+	var name;
+	var size;
+	for (var i = 0; i < names.length; i++) {
+		name = names[i] + '.txt';
+		size = sizes[i];
+		addFile(name, size);
+	}
+	render();
+}
+
 var bitmap = [];
 var fileList = [];
 function initBitMap() {
@@ -67,6 +100,7 @@ function initRender() {
 
 }
 function render() {
+	initRender();
 	var canvas = document.getElementById('bitmap');
 	var ctx = canvas.getContext('2d');
 
@@ -95,5 +129,4 @@ function render() {
 	}
 }
 
-initBitMap();
 initRender();
