@@ -51,6 +51,7 @@ function commitData() {
     }
     rightData();
     calculate();
+    showData();
     render();
 }
 function wrongData() {
@@ -155,6 +156,30 @@ function calculateSCAN() {
             timeClock++;
         }
     }
+}
+function showData() {
+    var sstf = $('#SSTF');
+    var scan = $('#SCAN');
+
+    var text = '';
+    var sm = 0;
+    text = SSTFdata[1][1];
+    sm = Math.abs(SSTFdata[1][1] - SSTFdata[0][1]);
+    for (var i = 2; i < SSTFdata.length; i++) {
+        text += ',' + SSTFdata[i][1];
+        sm += Math.abs(SSTFdata[i][1] - SSTFdata[i - 1][1]);
+    }
+    sstf.find('.response').text(text);
+    sstf.find('.total').text(sm);
+
+    text = SCANdata[1][1];
+    sm = Math.abs(SCANdata[1][1] - SCANdata[0][1]);
+    for (var i = 2; i < SCANdata.length; i++) {
+        text += ',' + SCANdata[i][1];
+        sm += Math.abs(SCANdata[i][1] - SCANdata[i - 1][1]);
+    }
+    scan.find('.response').text(text);
+    scan.find('.total').text(sm);
 }
 
 
