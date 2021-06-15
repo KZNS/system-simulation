@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+	<title>文件管理</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<h1>文件管理</h1>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<hr />
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h4>随机生成2k-10k的文件50个</h4>
+			</div>
+			<div class="col">
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-success" onclick="randomData()">随机数据</button>
+				<button type="button" class="btn btn-primary" onclick="commitData()">提交数据</button>
+			</div>
+		</div>
+		<div class="clearfix" style="margin-bottom: 10px;"></div>
+		<div class="row">
+			<div class="col">
+				<h4>删除 奇数.txt</h4>
+			</div>
+			<div class="col">
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-primary" onclick="commitData()">提交数据</button>
+			</div>
+		</div>
+		<div class="clearfix" style="margin-bottom: 10px;"></div>
+		<div class="row">
+			<div class="col">
+				<h4>创建5个文件</h4>
+			</div>
+			<div class="col">
+				<p>A.txt、B.txt、C.txt、D.txt、E.txt<br>
+					大小为：7k、5k、2k、9k、3.5k</p>
+			</div>
+			<div class="col">
+				<button type="button" class="btn btn-primary" onclick="commitData()">提交数据</button>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col">
+				<hr />
+			</div>
+		</div>
+	</div>
+
+	<div class="container">
+		<div class="row">
+			<div class="col">
+				<h2>
+					模拟
+				</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">位视图</div>
+			<div class="col">A~E.txt 盘块存储状态</div>
+		</div>
+
+		<div class="row" style="text-align: left;">
+			<div class="col">
+				<canvas id="bitmap" width="520" height="645"></canvas>
+			</div>
+			<div class="col"></div>
+		</div>
+	</div>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+		integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+		crossorigin="anonymous"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+		integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
+	<script src="js/common.js"></script>
+	<script src="js/file.js"></script>
+</body>
+
+</html>
