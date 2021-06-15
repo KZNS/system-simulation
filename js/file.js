@@ -1,6 +1,7 @@
 
 
 function randomFile() {
+	console.log('do randomFile()');
 	initBitMap();
 	var name;
 	var size;
@@ -12,6 +13,7 @@ function randomFile() {
 	render();
 }
 function deleteOddFile() {
+	console.log('do addABCFile()');
 	var name;
 	for (var i = 1; i <= 50; i += 2) {
 		name = i + '.txt';
@@ -20,6 +22,7 @@ function deleteOddFile() {
 	render();
 }
 function addABCFile() {
+	console.log('do addABCFile()');
 	var names = ['A', 'B', 'C', 'D', 'E'];
 	var sizes = [7, 5, 2, 8, 3.5];
 	var name;
@@ -27,7 +30,7 @@ function addABCFile() {
 	for (var i = 0; i < names.length; i++) {
 		name = names[i] + '.txt';
 		size = sizes[i];
-		addFile(name, size);
+		addFile(name, size, 'orange');
 	}
 	var ABCList = [];
 	for (var i = fileList.length - 5; i < fileList.length; i++) {
@@ -52,14 +55,15 @@ var fileList = [];
 function initBitMap() {
 	bitmap = [];
 	for (var i = 0; i < 500; i++) {
-		bitmap.push(0);
+		bitmap.push('white');
 	}
 }
-function addFile(name, size) {
+function addFile(name, size, color = 'green') {
+	console.log('do addFile()');
 	var poss = [];
 	for (var i = 0; i < 500; i++) {
-		if (bitmap[i] == 0) {
-			bitmap[i] = 1;
+		if (bitmap[i] == 'white') {
+			bitmap[i] = color;
 			poss.push(i);
 			if (poss.length * 2 >= size) {
 				break;
@@ -78,7 +82,7 @@ function removeFile(name) {
 		}
 	}
 	for (var i = 0; i < poss.length; i++) {
-		bitmap[poss[i]] = 0;
+		bitmap[poss[i]] = 'white';
 	}
 }
 
@@ -90,6 +94,8 @@ var onep = 16;
 function initRender() {
 	var canvas = document.getElementById('bitmap');
 	var ctx = canvas.getContext('2d');
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	var x, y;
 	for (var i = 0; i <= 20; i++) {
@@ -133,12 +139,9 @@ function render() {
 			ctx.lineTo(x + onep, y + onep); // 绘制一条
 			ctx.lineTo(x, y + onep); // 绘制一条
 			ctx.closePath();
-			if (bitmap[i * 25 + j] == 1) {
-				ctx.fillStyle = "green";
-			}
-			else {
-				ctx.fillStyle = "white";
-			}
+
+			ctx.fillStyle = bitmap[i * 25 + j];
+			console.log(bitmap[i * 25 + j]);
 			ctx.fill();
 		}
 	}
