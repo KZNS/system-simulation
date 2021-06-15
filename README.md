@@ -15,5 +15,6 @@
 | processor | 处理器调度   |
 | memory    | 内存管理     |
 | disk      | 磁盘移臂调度 |
+| file      | 文件管理     |
 
 每个文件具体实现的内容见[笔记](note.md)
