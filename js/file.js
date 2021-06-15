@@ -1,6 +1,40 @@
 
-
 var bitmap = [];
+var fileList = [];
+function initBitMap() {
+	bitmap = [];
+	for (var i = 0; i < 500; i++) {
+		bitmap.push(0);
+	}
+}
+function addFile(name, size) {
+	var poss = [];
+	for (var i = 0; i < 500; i++) {
+		if (bitmap[i] == 0) {
+			bitmap[i] = 1;
+			poss.push(i);
+			if (poss.length * 2 >= size) {
+				break;
+			}
+		}
+	}
+	fileList.push({ name: name, poss: poss });
+}
+function removeFile(name) {
+	var poss = [];
+	for (var i = 0; i < fileList.length; i++) {
+		if (fileList[i].name == name) {
+			poss = fileList[i].poss;
+			fileList.splice(i, 1);
+			break;
+		}
+	}
+	for (var i = 0; i < poss.length; i++) {
+		bitmap[poss[i]] = 0;
+	}
+}
+
+
 var padding = { top: 10, right: 10, bottom: 10, left: 10 };
 var one = 20;
 var onep = 16;
@@ -61,4 +95,5 @@ function render() {
 	}
 }
 
+initBitMap();
 initRender();
