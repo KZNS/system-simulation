@@ -2,8 +2,10 @@
 
 - [1. processor scheduling](#1-processor-scheduling)
   - [1.1. 实验需求](#11-实验需求)
+  - [1.2. 测试数据](#12-测试数据)
 - [2. memory management](#2-memory-management)
   - [2.1. 实验需求](#21-实验需求)
+  - [2.2. 测试数据](#22-测试数据)
 - [3. disk shift arm scheduling](#3-disk-shift-arm-scheduling)
   - [3.1. 实验需求](#31-实验需求)
 - [4. file management](#4-file-management)
@@ -28,6 +30,16 @@
 2. 周转时间
 3. 带权周转时间
 
+### 1.2. 测试数据
+
+```text
+1,3
+1,2
+3,5
+4,5
+5,1
+```
+
 ## 2. memory management
 
 ### 2.1. 实验需求
@@ -44,6 +56,18 @@
 4. 在设计好的数据结构上设计一个**主存回收算法**。
    1. 其中，若回收的分区有上邻空闲分区和（或）下邻空闲分区，要求**合并**为一个空闲分区登记在空闲分区表的一个表项里。
 5. 系统每进行一次分配或回收，都要给出**内存映像图**或**已分配表**及**未分配表**以观察内存的变化。
+
+### 2.2. 测试数据
+
+```text
+allocate,20,0
+allocate,10,0
+allocate,30,0
+allocate,40,0
+recycle,,2
+recycle,,3
+allocate,30,0
+```
 
 ## 3. disk shift arm scheduling
 
