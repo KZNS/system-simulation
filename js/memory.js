@@ -450,9 +450,8 @@ function unlockEvent(evn) {
 /**
  * 执行事件
  * @param {事件} evn 待执行的事件
- * TODO: 修改函数名
  */
-function ExecuteEvent(evn) {
+function executeEvent(evn) {
     if (evn.eventType == 'allocate') {
         var memorySize = evn.memorySize;
         for (var i = 0; i < unusedList.length; i++) {
@@ -566,7 +565,7 @@ function nextClock() {
         $('#memoryTotalSize').prop('disabled', 'true');
     }
     lockEvent(evn);
-    ExecuteEvent(evn);
+    executeEvent(evn);
     eventClock++;
 
     return true;
