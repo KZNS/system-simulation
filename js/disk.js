@@ -3,13 +3,24 @@
  * @author KZNS
  */
 
+// --------------------------------
+// 输入数据
+// --------------------------------
+// SSTF 访问序列
 var SSTFdata = [];
+// SCAN 访问序列
 var SCANdata = [];
+// 原始数据
 var data = [];
+// 时钟
 var timeClock;
 
+// 非负数格式
 var nonNegativeInt = /^0|([1-9]\d*)$/;
 
+/**
+ * 生成随机数据
+ */
 function randomData() {
     console.log('do randomData()');
 
@@ -24,11 +35,16 @@ function randomData() {
     $('#data').prop('value', text);
 }
 
+/**
+ * 清空数据
+ */
 function clearData() {
     console.log('do clearData()');
     $('#data').prop('value', '');
 }
-
+/**
+ * 提交数据
+ */
 function commitData() {
     console.log('do commitData()');
 
@@ -54,13 +70,26 @@ function commitData() {
     showData();
     render();
 }
+/**
+ * 设置数据状态 错误数据
+ */
 function wrongData() {
     $('#data').addClass('is-invalid');
 }
+/**
+ * 设置数据状态 正确数据
+ */
 function rightData() {
     $('#data').removeClass('is-invalid');
 }
 
+// --------------------------------
+// 算法模拟
+// --------------------------------
+
+/**
+ * 计算数据
+ */
 function calculate() {
     console.log('do calculate()');
 
@@ -72,6 +101,9 @@ function calculate() {
     calculateSSTF();
     calculateSCAN();
 }
+/**
+ * 实用SSTF算法计算
+ */
 function calculateSSTF() {
     console.log('do calculateSSTF()');
 
@@ -107,6 +139,9 @@ function calculateSSTF() {
         }
     }
 }
+/**
+ * 实用SCAN算法计算
+ */
 function calculateSCAN() {
     console.log('do calculateSCAN()');
 
@@ -157,6 +192,9 @@ function calculateSCAN() {
         }
     }
 }
+/**
+ * 显示算法计算结果
+ */
 function showData() {
     var sstf = $('#SSTF');
     var scan = $('#SCAN');
@@ -182,6 +220,9 @@ function showData() {
     scan.find('.total').text(sm);
 }
 
+// --------------------------------
+// 可视化显示
+// --------------------------------
 
 // 图表的宽度和高度
 var width = 1000;
@@ -195,6 +236,9 @@ var svg = d3.select('#svg')
     .attr('width', width + 'px')
     .attr('height', height + 'px');
 
+/**
+ * 渲染折线图
+ */
 function render() {
     svg.selectAll('g').remove();
 
@@ -241,7 +285,8 @@ function render() {
         .attr('transform', 'translate(' + padding.left + ',' + (padding.top) + ')')
         .call(yAxis);
 
-    // 放入数据
+    // SSTF 放入数据 
+    // 放入折线
     svg.append('g')
         .append('path')
         .attr('class', 'line-path')
@@ -250,7 +295,7 @@ function render() {
         .attr('fill', 'none')
         .attr('stroke-width', 3)
         .attr('stroke', 'green');
-
+    // 放入数据点
     svg.append('g')
         .selectAll('circle')
         .data(SSTFdata)
@@ -262,6 +307,8 @@ function render() {
         })
         .attr('fill', 'green');
 
+    // SCAN 放入数据 
+    // 放入折线
     svg.append('g')
         .append('path')
         .attr('class', 'line-path')
@@ -270,7 +317,7 @@ function render() {
         .attr('fill', 'none')
         .attr('stroke-width', 3)
         .attr('stroke', 'blue');
-
+    // 放入数据点
     svg.append('g')
         .selectAll('circle')
         .data(SCANdata)
