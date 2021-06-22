@@ -16,46 +16,6 @@ function initModal(data) {
     $(target).find(".alert").removeClass("show");
 }
 /**
- * 处理批量输入的进程信息数据
- * @param {DOM} data 当前DOM元素
- */
-function inputProcessInfos(data) {
-    console.log("do inputProcessInfos()");
-    uncommitProcessInfos();
-    var infos = $("#inputProcessInfos").val();
-    processes = [];
-    console.log(infos);
-    datas = CSVToArray(infos);
-    for (var i = 0; i < datas.length; i++) {
-        if (datas[i].length != 2) {
-            console.log(datas[i].length);
-            $(data).siblings(".alert").addClass("show");
-            return;
-        }
-        processes.push(newProcess());
-        processes[i].arrivalTime = datas[i][0];
-        processes[i].serviceTime = datas[i][1];
-    }
-    if (processes.length == 0) {
-        processes.push(newProcess());
-    }
-    // 关闭模态框
-    $("#inputProcessInfos-Modal").modal("hide");
-    updateTable();
-}
-/**
- * 保存当前进程信息到剪贴板
- */
-function saveInfos() {
-    console.log("do saveProcessInfos()");
-    var infos = processes[0].arrivalTime + ',' + processes[0].serviceTime;
-    for (var i = 1; i < processes.length; i++) {
-        infos = infos + '\n' + processes[i].arrivalTime + ',' + processes[i].serviceTime;
-    }
-
-    navigator.clipboard.writeText(infos)
-}
-/**
  * ref: http://stackoverflow.com/a/1293163/2343
  * This will parse a delimited string into an array of
  * arrays. The default delimiter is the comma, but this
