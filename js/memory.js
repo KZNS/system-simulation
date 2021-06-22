@@ -205,6 +205,10 @@ function updateTable() {
     }
     fitData();
 }
+/**
+ * 修改DOM，使其适应事件的事件类型
+ * @param {事件} evn 事件信息
+ */
 function fitEventType(evn) {
     console.log('do fitEventType()');
 
@@ -222,6 +226,9 @@ function fitEventType(evn) {
         console.log('wrong eventType');
     }
 }
+/**
+ * 修改DOM中事件的数据
+ */
 function fitData() {
     console.log('do fitData()');
     var idList = [];
@@ -236,6 +243,11 @@ function fitData() {
         }
     }
 }
+/**
+ * 为事件DOM中设置可选择删除的事件
+ * @param {事件} evn 事件信息
+ * @param {list} idList 可删除事件列表
+ */
 function setDelIDOption(evn, idList) {
     var delIDSelect = $('#' + evn.eventID + ' .delID');
     delIDSelect.empty();
@@ -385,7 +397,7 @@ function saveEventInfos() {
 }
 
 // --------------------------------
-// 逐步模拟
+// 模拟器部分
 // --------------------------------
 var memoryTotalSize;
 var eventClock = 0;
@@ -394,6 +406,11 @@ var usedList = [];
 var unusedList = [];
 var operationLogs = [];
 
+/**
+ * 数据正确性检查
+ * @param {事件} evn 需要检查的事件
+ * @returns 数据是否正确
+ */
 function checkData(evn) {
     if (evn.eventType == 'allocate') {
         var value = $('#' + evn.eventID + ' .memorySize').prop('value');
@@ -404,12 +421,20 @@ function checkData(evn) {
     }
     return true;
 }
+/**
+ * 锁定事件，使其信息不可编辑
+ * @param {事件} evn 操作的事件
+ */
 function lockEvent(evn) {
     var eventInfosTr = $('#' + evn.eventID);
     eventInfosTr.find('.eventType').prop('disabled', true);
     eventInfosTr.find('.memorySize').prop('disabled', true);
     eventInfosTr.find('.delID').prop('disabled', true);
 }
+/**
+ * 解锁事件，使其信息可编辑
+ * @param {事件} evn 操作的事件
+ */
 function unlockEvent(evn) {
     var eventInfosTr = $('#' + evn.eventID);
     eventInfosTr.find('.eventType').prop('disabled', false);
@@ -422,6 +447,11 @@ function unlockEvent(evn) {
         eventInfosTr.find('.delID').prop('disabled', false);
     }
 }
+/**
+ * 执行事件
+ * @param {事件} evn 待执行的事件
+ * TODO: 修改函数名
+ */
 function ExecuteEvent(evn) {
     if (evn.eventType == 'allocate') {
         var memorySize = evn.memorySize;
@@ -444,6 +474,12 @@ function ExecuteEvent(evn) {
         }
     }
 }
+/**
+ * 在指定的位置分配空间
+ * @param {number} id 事件id 
+ * @param {number} size 分配大小
+ * @param {number} index 空闲空间列表编号
+ */
 function useMemory(id, size, index) {
     var startAddress = unusedList[index].startAddress;
     if (size < unusedList[index].size) {
@@ -463,6 +499,10 @@ function useMemory(id, size, index) {
         { startAddress: startAddress, size: size, id: id }
     );
 }
+/**
+ * 释放指定内存
+ * @param {number} index 非空闲空间列表编号
+ */
 function unuseMemory(index) {
     var startAddress = usedList[index].startAddress;
     var size = usedList[index].size;
@@ -484,6 +524,9 @@ function unuseMemory(index) {
         }
     }
 }
+// --------------------------------
+// 模拟器控件
+// --------------------------------
 function nextStep() {
     console.log('do nextStep()');
 
