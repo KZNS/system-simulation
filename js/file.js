@@ -1,5 +1,14 @@
+/**
+ * @file 文件管理 页面控制、模拟动画
+ * @author KZNS
+ */
 
-
+// --------------------------------
+// 指定功能
+// --------------------------------
+/**
+ * 随机50个文件
+ */
 function randomFile() {
 	console.log('do randomFile()');
 	initBitMap();
@@ -12,6 +21,9 @@ function randomFile() {
 	}
 	render();
 }
+/**
+ * 删除奇数文件
+ */
 function deleteOddFile() {
 	console.log('do addABCFile()');
 	var name;
@@ -21,6 +33,9 @@ function deleteOddFile() {
 	}
 	render();
 }
+/**
+ * 添加特殊文件ABC...
+ */
 function addABCFile() {
 	console.log('do addABCFile()');
 	var names = ['A', 'B', 'C', 'D', 'E'];
@@ -50,14 +65,28 @@ function addABCFile() {
 	render();
 }
 
+/**
+ * 算法模拟
+ */
+// 位视图信息
 var bitmap = [];
+// 文件列表
 var fileList = [];
+/**
+ * 初始化位视图
+ */
 function initBitMap() {
 	bitmap = [];
 	for (var i = 0; i < 500; i++) {
 		bitmap.push('white');
 	}
 }
+/**
+ * 添加文件到文件系统
+ * @param {string} name 文件名
+ * @param {number} size 文件大小
+ * @param {string} color 位视图块颜色
+ */
 function addFile(name, size, color = 'green') {
 	console.log('do addFile()');
 	var poss = [];
@@ -72,6 +101,10 @@ function addFile(name, size, color = 'green') {
 	}
 	fileList.push({ name: name, poss: poss });
 }
+/**
+ * 删除指定文件
+ * @param {string} name 文件名
+ */
 function removeFile(name) {
 	var poss = [];
 	for (var i = 0; i < fileList.length; i++) {
@@ -86,11 +119,20 @@ function removeFile(name) {
 	}
 }
 
+// --------------------------------
+// 位视图可视化
+// --------------------------------
 
+// 图片边界
 var padding = { top: 10, right: 10, bottom: 10, left: 10 };
+// 格子外大小
 var one = 20;
+// 格子内大小
 var onep = 16;
 
+/**
+ * 初始化位视图
+ */
 function initRender() {
 	var canvas = document.getElementById('bitmap');
 	var ctx = canvas.getContext('2d');
@@ -120,6 +162,9 @@ function initRender() {
 	}
 
 }
+/**
+ * 渲染位视图
+ */
 function render() {
 	initRender();
 	var canvas = document.getElementById('bitmap');
@@ -135,9 +180,9 @@ function render() {
 			y += Math.round((one - onep) / 2);
 			ctx.beginPath(); // 开始路径绘制
 			ctx.moveTo(x, y); // 设置路径起点
-			ctx.lineTo(x + onep, y); // 绘制一条
-			ctx.lineTo(x + onep, y + onep); // 绘制一条
-			ctx.lineTo(x, y + onep); // 绘制一条
+			ctx.lineTo(x + onep, y); // 绘制一条边
+			ctx.lineTo(x + onep, y + onep); // 绘制一条边
+			ctx.lineTo(x, y + onep); // 绘制一条边
 			ctx.closePath();
 
 			ctx.fillStyle = bitmap[i * 25 + j];
